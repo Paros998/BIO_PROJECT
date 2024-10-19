@@ -9,9 +9,10 @@
 ## Wybrane zagrożenia bezpieczenśtwa do implementacji bezpieczeństwa
 ### Sql Injection
 ### XSS
-### TODO
-### TODO
-### TODO
+### OWASP TOP 10
+#### A05:2021-Security Misconfiguration
+#### A06:2021-Vulnerable and Outdated Components
+#### A01:2021-Broken Access Control
 
 ## Harmonogram projektu:
 
