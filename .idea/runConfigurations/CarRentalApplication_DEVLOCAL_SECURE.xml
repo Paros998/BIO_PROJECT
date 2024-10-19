@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="CarRentalApplication DEVLOCAL SECURE" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="DEVLOCAL,SECURE" />
+    <module name="psk.bio.car.rental.standalone" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="psk.bio.car.rental.spring.boot.standalone.CarRentalApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

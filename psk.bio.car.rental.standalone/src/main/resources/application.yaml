@@ -1,0 +1,22 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+
+management:
+  server:
+    port: 9080
+
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    default: DEFAULT
+    active: DEFAULT,SECURE
+    group:
+      DEFAULT: SWAGGER,SBA,POSTGRES
+      DEVLOCAL: SWAGGER,SBA,H2
+      SECURE: SECURE_ERRORS,RSA_ENCRYPTION
+      INSECURE: INSECURE_ERRORS,MD5_ENCRYPTION
+jwt:
+  secret: ${JWT_SECRET}

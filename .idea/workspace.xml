@@ -5,21 +5,34 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="07d48bcf-b5f4-46ec-be34-aeb611bc867f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/checkstyle-idea.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/personal.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BIO.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.application/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/src/main/java/psk/bio/car/rental/infrastructure/spring/configuration/CarRentalMainConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.tests/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.application/src/main/java/psk/bio/car/rental/application/.keep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.application/src/main/java/psk/bio/car/rental/application/profiles/ApplicationProfile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.application/src/main/java/psk/bio/car/rental/application/security/UserRole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure.spring/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure.spring/src/main/java/psk/bio/car/rental/infrastructure/spring/configuration/SecurityConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure.spring/src/main/java/psk/bio/car/rental/infrastructure/spring/configuration/SwaggerConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/src/main/java/psk/bio/car/rental/infrastructure/data/.keep" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/java/psk/bio/car/rental/spring/boot/standalone/CarRentalApplication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/resources/application-DEVLOCAL.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/resources/application-H2.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/resources/application-POSTGRES.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/resources/application-SBA.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/src/main/resources/application.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.tests/src/test/java/psk/bio/car/rental/integration/tests/CarRentalIntegrationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.tests/src/test/java/psk/bio/car/rental/integration/tests/cases/MainApplicationTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/psk.bio.car.rental.tests/src/test/java/psk/bio/car/rental/integration/tests/configuration/CarRentalTestConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psk.bio.car.rental.application/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/psk.bio.car.rental.application/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure/src/main/java/psk/bio/car/rental/infrastructure/spring/configuration/CarRentalMainConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/psk.bio.car.rental.infrastructure.spring/src/main/java/psk/bio/car/rental/infrastructure/spring/configuration/CarRentalMainConfiguration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psk.bio.car.rental.standalone/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/psk.bio.car.rental.standalone/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/psk.bio.car.rental.tests/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/psk.bio.car.rental.tests/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +49,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
+  <component name="KubernetesApiProvider"><![CDATA[{
+  "isMigrated": true
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -49,10 +66,19 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "JUnit.MainApplicationTest.shouldAppStartupCorrectly.executor": "Run",
+    "Maven.car-rental [clean,install].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.CarRentalApplication DEVLOCAL SECURE.executor": "Run",
+    "Spring Boot.CarRentalApplication INSECURE.executor": "Run",
+    "Spring Boot.CarRentalApplication.executor": "Run",
     "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/personal/BIO",
+    "last_opened_file_path": "C:/Users/part4/IdeaProjects/BIO_PROJECT/psk.bio.car.rental.standalone/src/main/resources",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,20 +91,17 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
-    <configuration default="true" type="JetRunConfigurationType">
-      <module name="personal" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <module name="personal" />
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\part4\IdeaProjects\BIO_PROJECT\psk.bio.car.rental.standalone\src\main\resources" />
+      <recent name="C:\Users\part4\IdeaProjects\BIO_PROJECT" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="psk.bio.car.rental.application.security" />
+      <recent name="psk.bio.car.rental.infrastructure.spring.configuration" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.CarRentalApplication DEVLOCAL SECURE">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="personal" />
       <option name="ENV_FILES" value="" />
@@ -199,6 +222,47 @@
       <option name="USE_PATTERN" value="false" />
       <method v="2" />
     </configuration>
+    <configuration name="MainApplicationTest.shouldAppStartupCorrectly" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="psk.bio.car.rental.tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="psk.bio.car.rental.integration.tests.cases.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="psk.bio.car.rental.integration.tests.cases" />
+      <option name="MAIN_CLASS_NAME" value="psk.bio.car.rental.integration.tests.cases.MainApplicationTest" />
+      <option name="METHOD_NAME" value="shouldAppStartupCorrectly" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="personal" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="personal" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.MainApplicationTest.shouldAppStartupCorrectly" />
+      <item itemvalue="Spring Boot.CarRentalApplication SECURE" />
+      <item itemvalue="Spring Boot.CarRentalApplication INSECURE" />
+      <item itemvalue="Spring Boot.CarRentalApplication DEVLOCAL SECURE" />
+      <item itemvalue="Spring Boot.CarRentalApplication DEVLOCAL INSECURE" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.MainApplicationTest.shouldAppStartupCorrectly" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -215,5 +279,8 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>

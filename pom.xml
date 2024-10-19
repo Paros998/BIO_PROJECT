@@ -3,6 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+    </parent>
+
     <groupId>psk.bio.car.rental</groupId>
     <artifactId>car-rental</artifactId>
     <packaging>pom</packaging>
@@ -10,9 +16,10 @@
 
     <modules>
         <module>psk.bio.car.rental.application</module>
-        <module>psk.bio.car.rental.infrastructure</module>
+        <module>psk.bio.car.rental.infrastructure.spring</module>
         <module>psk.bio.car.rental.standalone</module>
         <module>psk.bio.car.rental.tests</module>
+        <module>psk.bio.car.rental.infrastructure</module>
     </modules>
 
     <name>psk.bio.car.rental</name>
@@ -34,25 +41,27 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- Spring Framework-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>${spring-framework-version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- Spring Boot -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot-starter-version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
             <!-- Inner modules -->
+            <dependency>
+                <groupId>psk.bio.car.rental</groupId>
+                <artifactId>psk.bio.car.rental.application</artifactId>
+                <version>${psk.bio.car.rental.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>psk.bio.car.rental</groupId>
+                <artifactId>psk.bio.car.rental.infrastructure</artifactId>
+                <version>${psk.bio.car.rental.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>psk.bio.car.rental</groupId>
+                <artifactId>psk.bio.car.rental.infrastructure.spring</artifactId>
+                <version>${psk.bio.car.rental.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>psk.bio.car.rental</groupId>
+                <artifactId>psk.bio.car.rental.standalone</artifactId>
+                <version>${psk.bio.car.rental.version}</version>
+            </dependency>
 
             <!-- 3rd party libraries-->
             <dependency>
