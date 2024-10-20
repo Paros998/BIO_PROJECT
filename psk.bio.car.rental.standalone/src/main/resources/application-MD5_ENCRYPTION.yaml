@@ -1,0 +1,4 @@
+security:
+  encryption:
+    md5:
+      salt: ${MD5_SALT}

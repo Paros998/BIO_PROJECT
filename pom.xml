@@ -34,7 +34,7 @@
         <spring-framework-version>6.1.13</spring-framework-version>
         <spring-boot-starter-version>3.3.4</spring-boot-starter-version>
 
-        <springdoc-openapi-version>1.6.11</springdoc-openapi-version>
+        <springdoc-openapi-version>2.6.0</springdoc-openapi-version>
         <jwt-api-version>0.11.5</jwt-api-version>
     </properties>
 
@@ -66,7 +66,7 @@
             <!-- 3rd party libraries-->
             <dependency>
                 <groupId>org.springdoc</groupId>
-                <artifactId>springdoc-openapi-ui</artifactId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
                 <version>${springdoc-openapi-version}</version>
             </dependency>
             <dependency>

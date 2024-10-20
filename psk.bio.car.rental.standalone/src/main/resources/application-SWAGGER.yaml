@@ -1,0 +1,9 @@
+# Spring Doc configuration
+# swagger-ui custom path
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+  show-actuator: true
+  api-docs:
+    enabled: true

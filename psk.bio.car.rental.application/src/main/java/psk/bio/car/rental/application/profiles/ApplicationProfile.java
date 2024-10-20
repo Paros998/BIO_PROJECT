@@ -15,5 +15,5 @@ public final class ApplicationProfile {
     public static final String SPRING_BOOT_ACTIVE = "SBA";
 
     public static final String MD5_ENCRYPTION = "MD5_ENCRYPTION";
-    public static final String RSA_ENCRYPTION = "RSA_ENCRYPTION";
+    public static final String BCRYPT_ENCRYPTION = "BCRYPT_ENCRYPTION";
 }

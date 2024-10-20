@@ -27,8 +27,9 @@ public class SecurityConfiguration {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        String acao = "Access-Control-Allow-Origin";
+        final CorsConfiguration configuration = new CorsConfiguration();
+        final String acao = "Access-Control-Allow-Origin";
+
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "https://localhost:8080", "http://localhost:3000",
                 "https://localhost:3000"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"));
@@ -36,7 +37,8 @@ public class SecurityConfiguration {
                 "Authorization", "Origin , Accept", "X-Requested-With", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
         configuration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept",
                 "Authorization", acao, acao, "Access-Control-Allow-Credentials"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
@@ -61,20 +63,6 @@ public class SecurityConfiguration {
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
     }
-
-//    @Bean
-//    public FormLoginAuthenticationFilter formLoginAuthenticationFilter(final UserService userService,
-//                                                                              final @NonNull AuthenticationManager authenticationManager,
-//                                                                              final @Value("${jwt.secret}") String jwtSecret) {
-//        var formLoginAuthenticationFilter = new FormLoginAuthenticationFilter(authenticationManager, userService, jwtSecret);
-//        formLoginAuthenticationFilter.setAuthenticationManager(authenticationManager);
-//        return formLoginAuthenticationFilter;
-//    }
-
-//    @Bean
-//    public JwtTokenFilter jwtTokenFilter(final @Value("${jwt.secret}") String jwtSecret) {
-//        return new JwtTokenFilter(jwtSecret);
-//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http) throws Exception {

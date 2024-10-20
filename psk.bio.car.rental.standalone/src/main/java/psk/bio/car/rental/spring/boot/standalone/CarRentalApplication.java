@@ -3,7 +3,7 @@ package psk.bio.car.rental.spring.boot.standalone;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
-import psk.bio.car.rental.infrastructure.spring.configuration.CarRentalMainConfiguration;
+import psk.bio.car.rental.infrastructure.spring.CarRentalMainConfiguration;
 
 @SpringBootApplication
 @Import({
