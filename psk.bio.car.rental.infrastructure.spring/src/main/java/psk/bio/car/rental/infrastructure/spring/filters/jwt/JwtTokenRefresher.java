@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-import psk.bio.car.rental.application.security.UserProjection;
+import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 
 import java.io.IOException;

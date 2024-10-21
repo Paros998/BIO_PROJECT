@@ -1,5 +1,3 @@
-SHOW_SQL: true
-
 car-rental:
   users:
     starter:
@@ -15,6 +13,15 @@ car-rental:
             national-id: '92102005998'
             enabled: true
             employee-identifier: 'ADM-1'
+          - userId: '50635fad-bdc1-4f1b-b4e2-50d5195917dc'
+            password: 'Admin123321_#@!'
+            email: 'admin_2@rental.com'
+            first-name: 'Bob'
+            last-name: 'Dylan'
+            phone-number: '887102990'
+            national-id: '92102005998'
+            enabled: true
+            employee-identifier: 'ADM-2'
         employees:
           - userId: 'ada533c0-1f61-4b18-bdad-dc865687a31f'
             password: 'Employee123321_#@!'

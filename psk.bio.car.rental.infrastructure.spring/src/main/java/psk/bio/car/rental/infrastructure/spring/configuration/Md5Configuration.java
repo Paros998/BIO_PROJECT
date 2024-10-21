@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import psk.bio.car.rental.application.profiles.ApplicationProfile;
-import psk.bio.car.rental.application.security.utils.Md5PasswordEncoder;
+import psk.bio.car.rental.application.security.password.encoders.Md5PasswordEncoder;
 
 @Profile(ApplicationProfile.MD5_ENCRYPTION)
 @Configuration

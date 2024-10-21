@@ -2,20 +2,26 @@ package psk.bio.car.rental.infrastructure.data.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.hibernate.proxy.HibernateProxy;
 import psk.bio.car.rental.application.security.Permission;
-import psk.bio.car.rental.application.security.UserProjection;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.application.user.UserProjection;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
 @Setter
 @Entity(name = "users")
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@ToString
+@SuperBuilder
 public class UserEntity implements UserProjection {
     @Id
     @GeneratedValue(
@@ -25,30 +31,47 @@ public class UserEntity implements UserProjection {
             nullable = false,
             updatable = false
     )
-    private UUID userId;
+    protected UUID userId;
 
-    private String password;
+    protected String password;
 
-    private String email;
+    @Column(unique = true, nullable = false)
+    protected String email;
 
-    private String firstName;
+    protected String firstName;
 
-    private String lastName;
+    protected String lastName;
 
-    private String phoneNumber;
+    protected String phoneNumber;
 
-    private String nationalId;
+    protected String nationalId;
 
-    private Boolean enabled;
+    protected Boolean enabled;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    protected UserRole role;
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Permission.class)
-    private List<Permission> permissions;
+    protected List<Permission> permissions = new ArrayList<>();
 
     @Override
     public Boolean isActive() {
         return enabled;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        UserEntity that = (UserEntity) o;
+        return getUserId() != null && Objects.equals(getUserId(), that.getUserId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

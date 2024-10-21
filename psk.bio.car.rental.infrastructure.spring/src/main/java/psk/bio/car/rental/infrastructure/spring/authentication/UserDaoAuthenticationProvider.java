@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import psk.bio.car.rental.application.security.UserProjection;
+import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 
 import java.util.Optional;

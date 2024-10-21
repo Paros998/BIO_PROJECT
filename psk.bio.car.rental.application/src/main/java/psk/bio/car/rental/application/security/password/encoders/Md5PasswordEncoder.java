@@ -1,4 +1,4 @@
-package psk.bio.car.rental.application.security.utils;
+package psk.bio.car.rental.application.security.password.encoders;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

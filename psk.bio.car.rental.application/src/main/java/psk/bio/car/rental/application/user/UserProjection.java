@@ -1,4 +1,4 @@
-package psk.bio.car.rental.application.security;
+package psk.bio.car.rental.application.user;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,6 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+
+import psk.bio.car.rental.application.security.Permission;
+import psk.bio.car.rental.application.security.UserRole;
 
 public interface UserProjection extends UserDetails {
     String ROLE_PREFIX = "ROLE_";
