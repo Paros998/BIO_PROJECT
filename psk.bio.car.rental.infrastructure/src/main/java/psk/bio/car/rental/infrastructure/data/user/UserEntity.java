@@ -3,7 +3,7 @@ package psk.bio.car.rental.infrastructure.data.user;
 import jakarta.persistence.*;
 import lombok.*;
 import psk.bio.car.rental.application.security.Permission;
-import psk.bio.car.rental.application.security.UserProjection;
+import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.security.UserRole;
 
 import java.util.List;
@@ -25,27 +25,27 @@ public class UserEntity implements UserProjection {
             nullable = false,
             updatable = false
     )
-    private UUID userId;
+    protected UUID userId;
 
-    private String password;
+    protected String password;
 
-    private String email;
+    protected String email;
 
-    private String firstName;
+    protected String firstName;
 
-    private String lastName;
+    protected String lastName;
 
-    private String phoneNumber;
+    protected String phoneNumber;
 
-    private String nationalId;
+    protected String nationalId;
 
-    private Boolean enabled;
+    protected Boolean enabled;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    protected UserRole role;
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Permission.class)
-    private List<Permission> permissions;
+    protected List<Permission> permissions;
 
     @Override
     public Boolean isActive() {

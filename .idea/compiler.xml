@@ -17,6 +17,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="BIO" options="-parameters" />
       <module name="car-rental" options="-parameters" />
       <module name="psk.bio.car.rental.application" options="-parameters" />
       <module name="psk.bio.car.rental.infrastructure" options="-parameters" />
