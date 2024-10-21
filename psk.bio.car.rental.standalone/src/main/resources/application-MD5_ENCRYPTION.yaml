@@ -1,4 +1,4 @@
 security:
   encryption:
     md5:
-      salt: ${MD5_SALT}
+      salt: ${MD5_SALT:SomeInsecureSalt1231234151251235245234r123e41234r1234r234r2Sgsdfg}
