@@ -3,27 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>psk.bio.car.rental</groupId>
         <artifactId>car-rental</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>psk.bio.car.rental.application</artifactId>
+    <artifactId>psk.bio.car.rental.api</artifactId>
 
     <dependencies>
-        <!-- Spring -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
-        </dependency>
-
-        <!-- Inner modules -->
-        <dependency>
-            <groupId>psk.bio.car.rental</groupId>
-            <artifactId>psk.bio.car.rental.api</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -31,5 +19,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>

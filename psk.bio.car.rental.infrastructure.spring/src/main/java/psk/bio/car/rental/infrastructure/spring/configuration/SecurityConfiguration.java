@@ -8,6 +8,7 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,6 +18,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.infrastructure.spring.filters.formlogin.FormLoginAuthenticationFilter;
+import psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,12 +68,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http,
+                                                   final @NonNull AuthenticationManager authenticationManager,
+                                                   final @NonNull FormLoginAuthenticationFilter formLoginAuthenticationFilter,
+                                                   final @NonNull JwtTokenFilter jwtTokenFilter) throws Exception {
         http
+                .authenticationManager(authenticationManager)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractAuthenticationFilterConfigurer::disable)
                 .logout(AbstractHttpConfigurer::disable)
+
+                .addFilter(formLoginAuthenticationFilter)
+                .addFilterAfter(jwtTokenFilter, FormLoginAuthenticationFilter.class)
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",

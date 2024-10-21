@@ -20,6 +20,7 @@
         <module>psk.bio.car.rental.standalone</module>
         <module>psk.bio.car.rental.tests</module>
         <module>psk.bio.car.rental.infrastructure</module>
+        <module>psk.bio.car.rental.api</module>
     </modules>
 
     <name>psk.bio.car.rental</name>
@@ -42,6 +43,11 @@
         <dependencies>
 
             <!-- Inner modules -->
+            <dependency>
+                <groupId>psk.bio.car.rental</groupId>
+                <artifactId>psk.bio.car.rental.api</artifactId>
+                <version>${psk.bio.car.rental.version}</version>
+            </dependency>
             <dependency>
                 <groupId>psk.bio.car.rental</groupId>
                 <artifactId>psk.bio.car.rental.application</artifactId>
