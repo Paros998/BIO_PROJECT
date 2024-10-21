@@ -1,4 +1,4 @@
-package psk.bio.car.rental.spring.boot.standalone.runners;
+package psk.bio.car.rental.spring.boot.standalone.starters.users;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;

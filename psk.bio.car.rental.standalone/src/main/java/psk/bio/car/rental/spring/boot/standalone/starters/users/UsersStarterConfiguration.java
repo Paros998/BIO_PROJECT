@@ -1,4 +1,4 @@
-package psk.bio.car.rental.spring.boot.standalone.runners;
+package psk.bio.car.rental.spring.boot.standalone.starters.users;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
