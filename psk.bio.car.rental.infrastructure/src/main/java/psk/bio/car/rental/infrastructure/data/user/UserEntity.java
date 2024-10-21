@@ -3,8 +3,8 @@ package psk.bio.car.rental.infrastructure.data.user;
 import jakarta.persistence.*;
 import lombok.*;
 import psk.bio.car.rental.application.security.Permission;
-import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.application.user.UserProjection;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Entity(name = "users")
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.JOINED)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
