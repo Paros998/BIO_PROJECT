@@ -35,6 +35,7 @@ public class UserEntity implements UserProjection {
 
     protected String password;
 
+    @Column(unique = true, nullable = false)
     protected String email;
 
     protected String firstName;
