@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 import psk.bio.car.rental.infrastructure.spring.CarRentalMainConfiguration;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "psk.bio.car.rental.spring.boot.standalone.runners")
+@ComponentScan(basePackages = "psk.bio.car.rental.spring.boot.standalone.starters.users")
 @Import({
         CarRentalMainConfiguration.class
 })

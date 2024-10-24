@@ -27,11 +27,11 @@ public class UsersInitializer implements ApplicationRunner {
         config.getEmployees().forEach(employee -> employee.setPassword(passwordEncoder.encode(employee.getPassword())));
 
         final var clientsToAdd = config.getClients().stream()
-                .filter(client -> clientRepository.findOne(Example.of(client)).isPresent()).toList();
+                .filter(client -> clientRepository.findOne(Example.of(client)).isEmpty()).toList();
         final var adminsToAdd = config.getAdmins().stream()
-                .filter(admin -> employeeRepository.findOne(Example.of(admin)).isPresent()).toList();
+                .filter(admin -> employeeRepository.findOne(Example.of(admin)).isEmpty()).toList();
         final var employeesToAdd = config.getEmployees().stream()
-                .filter(employee -> employeeRepository.findOne(Example.of(employee)).isPresent()).toList();
+                .filter(employee -> employeeRepository.findOne(Example.of(employee)).isEmpty()).toList();
 
         clientRepository.saveAll(clientsToAdd);
         log.info("Initialized clients: {}", clientRepository.findAll());
