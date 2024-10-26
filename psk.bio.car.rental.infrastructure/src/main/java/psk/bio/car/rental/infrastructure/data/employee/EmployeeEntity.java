@@ -21,7 +21,10 @@ public class EmployeeEntity extends UserEntity {
     @Column(unique = true, nullable = false)
     private String employeeIdentifier;
 
-    /* TODO employee domain data */
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
 
     public EmployeeEntity() {
         this.role = UserRole.EMPLOYEE;
