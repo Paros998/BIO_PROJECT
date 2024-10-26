@@ -5,7 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface VehicleRepository {
-  Collection<UserProjection> findAllVehicles();
+  Collection<VehicleProjection> findAllVehicles();
 
-  Optional<UserProjection> findById(UUID id);
+  Optional<VehicleProjection> findById(UUID id);
+  Optional<VehicleProjection> findByModel(String model);
+  Optional<VehicleProjection> findByYear(int year);
+  Optional<VehicleProjection> findByModelAndYear(String model, int year);
 }
