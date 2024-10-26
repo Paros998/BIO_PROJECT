@@ -1,4 +1,4 @@
-package psk.bio.car.rental.application.user;
+package psk.bio.car.rental.application.vehicle;
 
 import java.util.Collection;
 import java.util.Optional;
