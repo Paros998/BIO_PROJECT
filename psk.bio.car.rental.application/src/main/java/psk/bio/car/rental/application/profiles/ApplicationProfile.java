@@ -3,6 +3,7 @@ package psk.bio.car.rental.application.profiles;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+@SuppressWarnings("checkstyle:HideUtilityClassConstructor")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class ApplicationProfile {
     public static final String DEVLOCAL = "DEVLOCAL";

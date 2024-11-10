@@ -29,6 +29,13 @@ import java.util.List;
 public class SecurityConfiguration {
 
     @Bean
+    static @NonNull MethodSecurityExpressionHandler methodSecurityExpressionHandler(final @NonNull RoleHierarchy roleHierarchy) {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy);
+        return expressionHandler;
+    }
+
+    @Bean
     CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
         final String acao = "Access-Control-Allow-Origin";
@@ -61,13 +68,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    static @NonNull MethodSecurityExpressionHandler methodSecurityExpressionHandler(final @NonNull RoleHierarchy roleHierarchy) {
-        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy);
-        return expressionHandler;
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(final @NonNull HttpSecurity http,
                                                    final @NonNull AuthenticationManager authenticationManager,
                                                    final @NonNull FormLoginAuthenticationFilter formLoginAuthenticationFilter,
@@ -91,8 +91,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register", "/login").anonymous())
 
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        ;
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }

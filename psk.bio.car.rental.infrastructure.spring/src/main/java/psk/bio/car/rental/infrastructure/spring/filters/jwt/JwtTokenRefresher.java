@@ -25,6 +25,8 @@ import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACC
 public class JwtTokenRefresher {
     private static final String AUTH_BEARER = "Bearer";
     private static final String AUTH_HEADER = "Authorization-Refresh";
+    private static final int TOKEN_REFRESHED_STATUS = 299;
+    private static final int TOKEN_EXPIRED_STATUS = 499;
 
     private final UserRepository userRepository;
     private final String secretKey;
@@ -56,16 +58,19 @@ public class JwtTokenRefresher {
                         .compact();
 
                 response.addHeader("Authorization", AUTH_BEARER + " " + accessToken);
-                response.setStatus(299);
+                response.setStatus(TOKEN_REFRESHED_STATUS);
 
             } catch (final Exception e) {
                 if (e.getClass().equals(ExpiredJwtException.class)) {
-                    response.sendError(499, String.format("Token %s has expired, please login again", token));
-                } else if (e.getClass().equals(SignatureException.class))
+                    response.sendError(TOKEN_EXPIRED_STATUS, String.format("Token %s has expired, please login again", token));
+                } else if (e.getClass().equals(SignatureException.class)) {
                     throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
-                else throw e;
+                } else {
+                    throw e;
+                }
             }
-        } else
+        } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, AUTH_HEADER + " token hasn't been provided with request");
+        }
     }
 }

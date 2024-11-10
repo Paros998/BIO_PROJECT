@@ -12,7 +12,7 @@ import psk.bio.car.rental.infrastructure.spring.CarRentalMainConfiguration;
         CarRentalMainConfiguration.class
 })
 public class CarRentalApplication {
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         SpringApplication.run(CarRentalApplication.class, args);
     }
 }

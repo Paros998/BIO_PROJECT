@@ -22,6 +22,7 @@ spring:
       DEVLOCAL: SWAGGER,SBA,H2
       SECURE: SECURE_ERRORS,BCRYPT_ENCRYPTION
       INSECURE: INSECURE_ERRORS,MD5_ENCRYPTION
+      test: DEVLOCAL
   jpa:
     show-sql: ${SHOW_SQL:false}
 jwt:

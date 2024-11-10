@@ -60,18 +60,24 @@ public class UserEntity implements UserProjection {
     }
 
     @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserEntity that = (UserEntity) o;
-        return getUserId() != null && Objects.equals(getUserId(), that.getUserId());
+        return Objects.equals(userId, that.userId) && Objects.equals(password, that.password)
+                && Objects.equals(email, that.email) && Objects.equals(firstName, that.firstName)
+                && Objects.equals(lastName, that.lastName) && Objects.equals(phoneNumber, that.phoneNumber)
+                && Objects.equals(nationalId, that.nationalId) && Objects.equals(enabled, that.enabled)
+                && role == that.role && Objects.equals(permissions, that.permissions);
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this)
+                .getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

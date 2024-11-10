@@ -22,6 +22,7 @@ public class Md5PasswordEncoder implements PasswordEncoder {
         return encodedPassword.equals(getSecurePassword(rawPassword.toString()));
     }
 
+    @SuppressWarnings("checkstyle:MagicNumber")
     private String getSecurePassword(final @NonNull String passwordToHash) {
         String generatedPassword;
         try {

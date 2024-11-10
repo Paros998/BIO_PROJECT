@@ -35,5 +35,5 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID>, User
                 .map(UserProjection.class::cast);
     }
 
-    Optional<UserEntity> findByEmail(final String username);
+    Optional<UserEntity> findByEmail(String username);
 }

@@ -4,7 +4,7 @@ car-rental:
   users:
     starter:
       enabled: true
-      data :
+      data:
         admins:
           - userId: '50635fad-bdc1-4f1b-b4e2-50d5195917da'
             password: 'Admin123321_#@!'

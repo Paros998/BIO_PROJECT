@@ -62,8 +62,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             } catch (final Exception e) {
                 if (e.getClass().equals(ExpiredJwtException.class)) {
                     tokenRefresher.attemptRefreshToken(request, response);
-                } else
+                } else {
                     throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+                }
             }
         }
         filterChain.doFilter(request, response);

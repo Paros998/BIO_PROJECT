@@ -34,7 +34,8 @@ public class AuthenticationConfiguration {
     }
 
     @Bean
-    public UserDaoAuthenticationProvider authenticationProvider(final UserRepository userRepository, final PasswordEncoder passwordEncoder) {
+    public UserDaoAuthenticationProvider authenticationProvider(final UserRepository userRepository,
+                                                                final PasswordEncoder passwordEncoder) {
         return new UserDaoAuthenticationProvider(userRepository, passwordEncoder);
     }
 }

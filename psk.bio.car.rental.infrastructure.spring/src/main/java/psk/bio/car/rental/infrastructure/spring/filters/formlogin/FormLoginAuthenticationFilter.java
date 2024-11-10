@@ -33,9 +33,11 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final String secretKey;
 
     @Override
-    public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response) throws AuthenticationException {
-        if (POST_ONLY && !request.getMethod().equals("POST"))
+    public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response)
+            throws AuthenticationException {
+        if (POST_ONLY && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
 
         String username = this.obtainUsername(request);
         username = username != null ? username : "";
@@ -53,8 +55,9 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     }
 
     @Override
-    protected void successfulAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response, final @NonNull FilterChain chain,
-                                            final @NonNull Authentication authResult) throws IOException, ServletException {
+    protected void successfulAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response,
+                                            final @NonNull FilterChain chain, final @NonNull Authentication authResult)
+            throws IOException, ServletException {
         try {
             final String username = this.obtainUsername(request);
 
@@ -84,10 +87,11 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
             response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
-            if (e.equals(new IOException(e.getMessage())))
+            if (e.equals(new IOException(e.getMessage()))) {
                 throw new IOException(e.getMessage());
-
-            else throw new ServletException(e.getMessage());
+            } else {
+                throw new ServletException(e.getMessage());
+            }
         }
     }
 }
