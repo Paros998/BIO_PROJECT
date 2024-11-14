@@ -34,6 +34,7 @@
         <!-- Dependency versions -->
         <spring-framework-version>6.1.13</spring-framework-version>
         <spring-boot-starter-version>3.3.4</spring-boot-starter-version>
+        <spring-boot-admin>3.3.2</spring-boot-admin>
 
         <springdoc-openapi-version>2.6.0</springdoc-openapi-version>
         <jwt-api-version>0.11.5</jwt-api-version>
@@ -89,6 +90,18 @@
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-jackson</artifactId>
                 <version>${jwt-api-version}</version>
+            </dependency>
+
+            <!-- Spring Boot Admin -->
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-server</artifactId>
+                <version>${spring-boot-admin}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.codecentric</groupId>
+                <artifactId>spring-boot-admin-starter-client</artifactId>
+                <version>${spring-boot-admin}</version>
             </dependency>
 
         </dependencies>

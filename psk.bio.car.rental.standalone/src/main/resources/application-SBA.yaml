@@ -1,1 +1,19 @@
 # Spring Boot Admin configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:${server.port}
+        enabled: true
+      server:
+        enabled: true
+      context-path: '/admin'

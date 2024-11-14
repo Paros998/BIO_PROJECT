@@ -25,5 +25,12 @@ spring:
       test: DEVLOCAL
   jpa:
     show-sql: ${SHOW_SQL:false}
+  boot:
+    admin:
+      client:
+        enabled: false
+      server:
+        enabled: false
+
 jwt:
   secret: ${JWT_SECRET}

@@ -84,7 +84,8 @@ public class SecurityConfiguration {
 
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
-                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico", "/error").permitAll())
+                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico", "/error",
+                                "/instances", "/admin", "/admin/**").permitAll())
 
                 //  API
                 .authorizeHttpRequests(requests -> requests
