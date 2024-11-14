@@ -1,17 +1,24 @@
 package psk.bio.car.rental.application.vehicle;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
-
 public interface VehicleRepository {
-    Collection<RentedVehicleProjection> findAllVehicles();
+    Vehicle save(NewVehicle vehicle);
 
-    Optional<RentedVehicleProjection> findById(UUID id);
+    Vehicle save(InRepairVehicle vehicle);
 
-    Optional<RentedVehicleProjection> findByModel(String model);
+    Vehicle save(ReadyToRentVehicle vehicle);
 
-    Optional<RentedVehicleProjection> findByYear(int year);
+    Vehicle save(RentedVehicle vehicle);
 
-    Optional<RentedVehicleProjection> findByModelAndYear(String model, int year);
+    Vehicle save(ReturnedVehicle vehicle);
+
+    // TODO rework rest
+//    Collection<RentedVehicle> findAllVehicles();
+//
+//    Optional<RentedVehicle> findById(UUID id);
+//
+//    Optional<RentedVehicle> findByModel(String model);
+//
+//    Optional<RentedVehicle> findByYear(int year);
+//
+//    Optional<RentedVehicle> findByModelAndYear(String model, int year);
 }

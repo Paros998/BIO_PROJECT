@@ -55,9 +55,21 @@ public class RentalEntity implements RentalProjection {
     @ManyToOne(fetch = FetchType.LAZY)
     private VehicleEntity vehicle;
 
+    @JsonBackReference
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY)
     private List<PaymentEntity> associatedPayments;
+
+    @Override
+    public void finishRental() {
+        this.endDate = LocalDateTime.now();
+        this.state = RentalState.FINISHED;
+    }
+
+    @Override
+    public String getRentalId() {
+        return id.toString();
+    }
 
     @Override
     public boolean equals(final Object o) {
