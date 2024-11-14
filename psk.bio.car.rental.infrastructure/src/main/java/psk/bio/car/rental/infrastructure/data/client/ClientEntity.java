@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.user.UserEntity;
 
@@ -29,6 +30,11 @@ public class ClientEntity extends UserEntity {
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<RentalEntity> rentedVehicles;
 
+    @JsonManagedReference
+    @ToString.Exclude
+    @OneToMany(mappedBy = "chargedClient", fetch = FetchType.LAZY)
+    private List<PaymentEntity> clientPayments;
+
     public ClientEntity() {
         this.role = UserRole.CLIENT;
     }
@@ -45,11 +51,11 @@ public class ClientEntity extends UserEntity {
             return false;
         }
         ClientEntity that = (ClientEntity) o;
-        return Objects.equals(rentedVehicles, that.rentedVehicles);
+        return Objects.equals(rentedVehicles, that.rentedVehicles) && (Objects.equals(clientPayments, that.clientPayments));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), rentedVehicles);
+        return Objects.hash(super.hashCode(), rentedVehicles, clientPayments);
     }
 }
