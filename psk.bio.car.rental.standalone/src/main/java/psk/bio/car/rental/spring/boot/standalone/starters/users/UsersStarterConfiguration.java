@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
+import psk.bio.car.rental.infrastructure.data.user.UserJpaRepository;
 
 @Configuration
 @ConditionalOnProperty(prefix = "car-rental.users.starter", value = "enabled", havingValue = "true")
@@ -23,7 +24,8 @@ public class UsersStarterConfiguration {
     public UsersInitializer usersInitializer(
             final @Lazy PasswordEncoder passwordEncoder,
             final @Lazy ClientJpaRepository clientJpaRepository,
-            final @Lazy EmployeeJpaRepository employeeJpaRepository) {
-        return new UsersInitializer(passwordEncoder, clientJpaRepository, employeeJpaRepository, usersToAddConfig());
+            final @Lazy EmployeeJpaRepository employeeJpaRepository,
+            final @Lazy UserJpaRepository userJpaRepository) {
+        return new UsersInitializer(passwordEncoder, clientJpaRepository, employeeJpaRepository, userJpaRepository, usersToAddConfig());
     }
 }

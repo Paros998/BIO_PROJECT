@@ -14,6 +14,7 @@ import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.user.UserEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,12 +29,12 @@ public class ClientEntity extends UserEntity {
     @JsonManagedReference
     @ToString.Exclude
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
-    private List<RentalEntity> rentedVehicles;
+    private List<RentalEntity> rentedVehicles = new ArrayList<>();
 
     @JsonManagedReference
     @ToString.Exclude
     @OneToMany(mappedBy = "chargedClient", fetch = FetchType.LAZY)
-    private List<PaymentEntity> clientPayments;
+    private List<PaymentEntity> clientPayments = new ArrayList<>();
 
     public ClientEntity() {
         this.role = UserRole.CLIENT;
@@ -51,7 +52,7 @@ public class ClientEntity extends UserEntity {
             return false;
         }
         ClientEntity that = (ClientEntity) o;
-        return Objects.equals(rentedVehicles, that.rentedVehicles) && (Objects.equals(clientPayments, that.clientPayments));
+        return Objects.equals(rentedVehicles, that.rentedVehicles) && Objects.equals(clientPayments, that.clientPayments);
     }
 
     @Override

@@ -11,6 +11,7 @@ import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -58,7 +59,7 @@ public class RentalEntity implements RentalProjection {
     @JsonBackReference
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY)
-    private List<PaymentEntity> associatedPayments;
+    private List<PaymentEntity> associatedPayments = new ArrayList<>();
 
     @Override
     public void finishRental() {
