@@ -10,6 +10,8 @@ import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 import psk.bio.car.rental.infrastructure.data.user.UserJpaRepository;
 
+import java.util.stream.Stream;
+
 @Log4j2
 @RequiredArgsConstructor
 public class UsersInitializer implements ApplicationRunner {
@@ -35,10 +37,10 @@ public class UsersInitializer implements ApplicationRunner {
                 .filter(employee -> userRepository.findByEmail(employee.getEmail()).isEmpty()).toList();
 
         clientRepository.saveAll(clientsToAdd);
-        log.info("Initialized clients: {}", clientRepository.findAll());
+        log.info("Initialized clients: {}", clientsToAdd);
 
         employeeRepository.saveAll(adminsToAdd);
         employeeRepository.saveAll(employeesToAdd);
-        log.info("Initialized employees: {}", employeeRepository.findAll());
+        log.info("Initialized employees: {}", Stream.concat(adminsToAdd.stream(), employeesToAdd.stream()).toList());
     }
 }
