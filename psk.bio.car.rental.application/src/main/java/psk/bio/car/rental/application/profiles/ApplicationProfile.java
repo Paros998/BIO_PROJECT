@@ -10,8 +10,12 @@ public final class ApplicationProfile {
 
     public static final String SWAGGER = "SWAGGER";
 
+    public static final String SECURE = "SECURE";
+
+    public static final String UNSECURE = "UNSECURE";
+
     public static final String SECURE_ERRORS = "SECURE_ERRORS";
-    public static final String INSECURE_ERRORS = "INSECURE_ERRORS";
+    public static final String UNSECURE_ERRORS = "UNSECURE_ERRORS";
 
     public static final String SPRING_BOOT_ACTIVE = "SBA";
 

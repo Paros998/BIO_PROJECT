@@ -8,7 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @CarRentalIntegrationTest
-@ActiveProfiles({"test", "INSECURE"})
+@ActiveProfiles({"test", "UNSECURE"})
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CarRentalUnsecureIntegrationTest {

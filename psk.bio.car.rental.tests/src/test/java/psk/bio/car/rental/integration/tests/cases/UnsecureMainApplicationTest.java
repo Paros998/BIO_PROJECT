@@ -8,7 +8,7 @@ import psk.bio.car.rental.integration.tests.CarRentalUnsecureIntegrationTest;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @CarRentalUnsecureIntegrationTest
-class InsecureMainApplicationTest {
+class UnsecureMainApplicationTest {
     @Autowired
     private ApplicationContext applicationContext;
 

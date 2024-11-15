@@ -26,6 +26,7 @@ replay_pid*
 .idea/inspectionProfiles/
 .idea/checkstyleidea-libs/
 .idea/sonarlint/
+.idea/dataSources/
 .idea/shelf/
 .idea/*.xml
 *.iml

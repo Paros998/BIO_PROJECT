@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="CarRentalApplication INSECURE" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <option name="ACTIVE_PROFILES" value="DEFAULT,INSECURE" />
+  <configuration default="false" name="CarRentalApplication UNSECURE" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="DEFAULT,UNSECURE" />
     <module name="psk.bio.car.rental.standalone" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="psk.bio.car.rental.spring.boot.standalone.CarRentalApplication" />
     <method v="2">
