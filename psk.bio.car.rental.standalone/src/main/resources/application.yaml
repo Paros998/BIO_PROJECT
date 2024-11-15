@@ -12,6 +12,8 @@ logging:
     root: INFO
 
 spring:
+  thymeleaf:
+    check-template-location: false
   config:
     import: optional:file:.env[.properties],optional:file:initial_users.yaml
   profiles:
