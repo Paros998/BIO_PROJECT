@@ -9,12 +9,10 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class ErrorResponse implements Serializable {
+public class SecureErrorResponse implements Serializable {
     private int status;
-    private String exception;
+    private String code;
     private String businessError;
-    private String uriPath;
-    private String stackTrace;
     @JsonIgnore // TODO fix later
     private LocalDateTime timestamp;
 }

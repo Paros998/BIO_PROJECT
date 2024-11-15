@@ -6,9 +6,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
-import psk.bio.car.rental.infrastructure.data.user.UserJpaRepository;
 
 import java.util.stream.Stream;
 
@@ -18,7 +18,7 @@ public class UsersInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final ClientJpaRepository clientRepository;
     private final EmployeeJpaRepository employeeRepository;
-    private final UserJpaRepository userRepository;
+    private final UserRepository userRepository;
     private final UsersToAddConfig config;
 
     @Override
@@ -30,11 +30,11 @@ public class UsersInitializer implements ApplicationRunner {
         config.getEmployees().forEach(employee -> employee.setPassword(passwordEncoder.encode(employee.getPassword())));
 
         final var clientsToAdd = config.getClients().stream()
-                .filter(client -> userRepository.findByEmail(client.getEmail()).isEmpty()).toList();
+                .filter(client -> userRepository.findByUsername(client.getEmail()).isEmpty()).toList();
         final var adminsToAdd = config.getAdmins().stream()
-                .filter(admin -> userRepository.findByEmail(admin.getEmail()).isEmpty()).toList();
+                .filter(admin -> userRepository.findByUsername(admin.getEmail()).isEmpty()).toList();
         final var employeesToAdd = config.getEmployees().stream()
-                .filter(employee -> userRepository.findByEmail(employee.getEmail()).isEmpty()).toList();
+                .filter(employee -> userRepository.findByUsername(employee.getEmail()).isEmpty()).toList();
 
         clientRepository.saveAll(clientsToAdd);
         log.info("Initialized clients: {}", clientsToAdd);

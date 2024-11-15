@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan(value = {
         "psk.bio.car.rental.application",
         "psk.bio.car.rental.infrastructure.spring.configuration",
-        "psk.bio.car.rental.infrastructure.spring.delivery.http"
+        "psk.bio.car.rental.infrastructure.spring.delivery.http",
+        "psk.bio.car.rental.infrastructure.spring.error.handling",
 })
 @EnableJpaRepositories(basePackages = "psk.bio.car.rental.infrastructure.data")
 @EntityScan(basePackages = "psk.bio.car.rental.infrastructure.data")

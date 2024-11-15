@@ -8,7 +8,7 @@ import psk.bio.car.rental.application.profiles.ApplicationProfile;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID>, User
     }
 
     @Override
-    default Collection<UserProjection> findAllUsers() {
+    default List<UserProjection> findAllUsers() {
         return findAll().stream()
                 .map(UserProjection.class::cast)
                 .toList();

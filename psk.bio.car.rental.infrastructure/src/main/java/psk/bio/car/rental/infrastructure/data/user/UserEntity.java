@@ -33,6 +33,7 @@ public class UserEntity implements UserProjection {
     )
     protected UUID userId;
 
+    @ToString.Exclude
     protected String password;
 
     @Column(unique = true, nullable = false)
