@@ -28,6 +28,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice(basePackages = "psk.bio.car")
 public class DefaultHttpAdvice implements AuthenticationEntryPoint {
 
+    // TODO fix, working only on security denied to endpoint (eg, call without endpoint without required auth headers)
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
             throws IOException {
