@@ -42,7 +42,7 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<SecureErrorResponse> handleException(final AuthenticationException authException) {
-        var response = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, null);
+        var response = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, authException.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
