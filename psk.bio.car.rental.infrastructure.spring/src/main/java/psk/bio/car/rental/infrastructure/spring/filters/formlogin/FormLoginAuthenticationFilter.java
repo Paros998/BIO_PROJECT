@@ -8,11 +8,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -31,6 +36,9 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final String secretKey;
+    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
+            .getContextHolderStrategy();
+    private final AuthenticationEntryPointFailureHandler failureHandler;
 
     @Override
     public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response)
@@ -52,6 +60,17 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
 
         return authenticationManager.authenticate(authRequest);
 
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException failed)
+            throws IOException, ServletException {
+        this.securityContextHolderStrategy.clearContext();
+        this.logger.trace("Failed to process authentication request", failed);
+        this.logger.trace("Cleared SecurityContextHolder");
+        this.logger.trace("Handling authentication failure");
+        this.getRememberMeServices().loginFail(request, response);
+        this.failureHandler.onAuthenticationFailure(request, response, failed);
     }
 
     @Override
