@@ -11,11 +11,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.util.Strings;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
@@ -31,7 +31,7 @@ public class JwtTokenRefresher {
     private final UserRepository userRepository;
     private final String secretKey;
 
-    public void attemptRefreshToken(final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+    public void attemptRefreshToken(final HttpServletRequest request, final HttpServletResponse response) {
         final String authorizationHeader = request.getHeader(AUTH_HEADER);
 
         if (!Strings.isNullOrEmpty(authorizationHeader) && authorizationHeader.startsWith(AUTH_BEARER + " ")) {
@@ -62,7 +62,8 @@ public class JwtTokenRefresher {
 
             } catch (final Exception e) {
                 if (e.getClass().equals(ExpiredJwtException.class)) {
-                    response.sendError(TOKEN_EXPIRED_STATUS, String.format("Token %s has expired, please login again", token));
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(TOKEN_EXPIRED_STATUS),
+                            String.format("Token %s has expired, please login again", token));
                 } else if (e.getClass().equals(SignatureException.class)) {
                     throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
                 } else {

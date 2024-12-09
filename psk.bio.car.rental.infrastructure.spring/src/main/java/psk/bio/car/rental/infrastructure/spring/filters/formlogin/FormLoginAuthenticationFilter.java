@@ -9,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,12 +32,13 @@ import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.REF
 @RequiredArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final boolean POST_ONLY = true;
-    private final AuthenticationManager authenticationManager;
-    private final UserRepository userRepository;
-    private final String secretKey;
     private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
             .getContextHolderStrategy();
+
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
     private final AuthenticationEntryPointFailureHandler failureHandler;
+    private final String secretKey;
 
     @Override
     public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response)
