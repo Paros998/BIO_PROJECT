@@ -63,7 +63,8 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     }
 
     @Override
-    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException failed)
+    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+                                              final AuthenticationException failed)
             throws IOException, ServletException {
         this.securityContextHolderStrategy.clearContext();
         this.logger.trace("Failed to process authentication request", failed);

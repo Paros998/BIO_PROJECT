@@ -14,6 +14,7 @@ public enum ErrorCode {
     UNAUTHORIZED("unauthorized-error", 401),
     PERMISSION_DENIED("permission-denied-error", 403),
     NOT_FOUND("not-found-error", 404),
+    EXPIRED_AUTH("expired-auth-token-error", 499),
     BUSINESS_ERROR("business-error", 422);
 
     @NonNull

@@ -75,7 +75,7 @@ public class SecurityConfiguration {
                                                    final @NonNull FormLoginAuthenticationFilter formLoginAuthenticationFilter,
                                                    final @NonNull JwtTokenFilter jwtTokenFilter,
                                                    final @NonNull @Qualifier("customHttpAdvice")
-                                                       AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
+                                                   AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
         http
                 .authenticationManager(authenticationManager)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -88,11 +88,27 @@ public class SecurityConfiguration {
                 .addFilterAfter(jwtTokenFilter, FormLoginAuthenticationFilter.class)
 
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/", "/actuator/**", "/actuator/health/**", "/swagger-ui/", "/swagger-ui/**",
-                                "/swagger-ui.html**", "/v3/api-docs/**", "/public/**", "/favicon.ico", "/error",
-                                "/instances", "/admin", "/admin/**").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/actuator/**",
+                                "/actuator/health/**",
+                                "/swagger-ui/",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html**",
+                                "/v3/api-docs/**",
+                                "/public/**",
+                                "/favicon.ico",
+                                "/error",
+                                "/instances",
+                                "/admin",
+                                "/admin/**"
+                        )
+                        .permitAll()
 
-                        .requestMatchers("/api/users").hasRole(UserRole.ADMIN.name())
+                        .requestMatchers(
+                                "/api/users"
+                        )
+                        .hasRole(UserRole.ADMIN.name())
                 )
 
                 //  API
