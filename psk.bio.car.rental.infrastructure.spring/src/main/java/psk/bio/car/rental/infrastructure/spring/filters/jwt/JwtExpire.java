@@ -10,7 +10,7 @@ public enum JwtExpire {
     /* in milliseconds e.g. 10 000 = 1 s */
     private final Integer amount;
 
-    JwtExpire(Integer amount) {
-        this.amount = amount;
+    JwtExpire(final Integer value) {
+        this.amount = value;
     }
 }

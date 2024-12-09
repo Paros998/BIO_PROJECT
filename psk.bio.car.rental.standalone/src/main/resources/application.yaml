@@ -12,6 +12,8 @@ logging:
     root: INFO
 
 spring:
+  thymeleaf:
+    check-template-location: false
   config:
     import: optional:file:.env[.properties],optional:file:initial_users.yaml
   profiles:
@@ -21,8 +23,16 @@ spring:
       DEFAULT: SWAGGER,SBA,POSTGRES
       DEVLOCAL: SWAGGER,SBA,H2
       SECURE: SECURE_ERRORS,BCRYPT_ENCRYPTION
-      INSECURE: INSECURE_ERRORS,MD5_ENCRYPTION
+      UNSECURE: UNSECURE_ERRORS,MD5_ENCRYPTION
+      test: DEVLOCAL
   jpa:
     show-sql: ${SHOW_SQL:false}
+  boot:
+    admin:
+      client:
+        enabled: false
+      server:
+        enabled: false
+
 jwt:
   secret: ${JWT_SECRET}

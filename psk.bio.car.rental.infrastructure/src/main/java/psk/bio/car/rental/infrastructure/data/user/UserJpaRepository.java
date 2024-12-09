@@ -1,15 +1,18 @@
 package psk.bio.car.rental.infrastructure.data.user;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import psk.bio.car.rental.application.profiles.ApplicationProfile;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Profile(ApplicationProfile.SECURE)
 @SuppressWarnings("unused")
 public interface UserJpaRepository extends JpaRepository<UserEntity, UUID>, UserRepository {
     @Override
@@ -23,7 +26,7 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID>, User
     }
 
     @Override
-    default Collection<UserProjection> findAllUsers() {
+    default List<UserProjection> findAllUsers() {
         return findAll().stream()
                 .map(UserProjection.class::cast)
                 .toList();
@@ -35,5 +38,5 @@ public interface UserJpaRepository extends JpaRepository<UserEntity, UUID>, User
                 .map(UserProjection.class::cast);
     }
 
-    Optional<UserEntity> findByEmail(final String username);
+    Optional<UserEntity> findByEmail(String username);
 }

@@ -1,14 +1,17 @@
 package psk.bio.car.rental.infrastructure.data.employee;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.user.UserEntity;
+
+import java.util.List;
+import java.util.Objects;
 
 
 @Getter
@@ -21,9 +24,32 @@ public class EmployeeEntity extends UserEntity {
     @Column(unique = true, nullable = false)
     private String employeeIdentifier;
 
-    /* TODO employee domain data */
+    @JsonManagedReference
+    @ToString.Exclude
+    @OneToMany(mappedBy = "participatingEmployee", fetch = FetchType.LAZY)
+    private List<RentalEntity> rentedVehicles;
 
     public EmployeeEntity() {
         this.role = UserRole.EMPLOYEE;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        EmployeeEntity that = (EmployeeEntity) o;
+        return Objects.equals(employeeIdentifier, that.employeeIdentifier) && Objects.equals(rentedVehicles, that.rentedVehicles);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), employeeIdentifier, rentedVehicles);
     }
 }

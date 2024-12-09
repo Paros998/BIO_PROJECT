@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 
@@ -23,7 +24,8 @@ public class UsersStarterConfiguration {
     public UsersInitializer usersInitializer(
             final @Lazy PasswordEncoder passwordEncoder,
             final @Lazy ClientJpaRepository clientJpaRepository,
-            final @Lazy EmployeeJpaRepository employeeJpaRepository) {
-        return new UsersInitializer(passwordEncoder, clientJpaRepository, employeeJpaRepository, usersToAddConfig());
+            final @Lazy EmployeeJpaRepository employeeJpaRepository,
+            final @Lazy UserRepository userRepository) {
+        return new UsersInitializer(passwordEncoder, clientJpaRepository, employeeJpaRepository, userRepository, usersToAddConfig());
     }
 }

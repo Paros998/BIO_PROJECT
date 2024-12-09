@@ -4,10 +4,9 @@ car-rental:
   users:
     starter:
       enabled: true
-      data :
+      data:
         admins:
-          - userId: '50635fad-bdc1-4f1b-b4e2-50d5195917da'
-            password: 'Admin123321_#@!'
+          - password: 'Admin123321_#@!'
             email: 'admin_1@rental.com'
             first-name: 'Bob'
             last-name: 'Dylan'
@@ -16,8 +15,7 @@ car-rental:
             enabled: true
             employee-identifier: 'ADM-1'
         employees:
-          - userId: 'ada533c0-1f61-4b18-bdad-dc865687a31f'
-            password: 'Employee123321_#@!'
+          - password: 'Employee123321_#@!'
             email: 'employee_1@rental.com'
             first-name: 'Mike'
             last-name: 'Taylor'
@@ -26,8 +24,7 @@ car-rental:
             enabled: true
             employee-identifier: 'EMP-1'
         clients:
-          - userId: '342a89fe-c542-472d-b7e2-96137ba6b2b3'
-            password: 'Client123321_#@!'
+          - password: 'Client123321_#@!'
             email: 'm.bohatko@gmail.com'
             first-name: 'Marcin'
             last-name: 'Bohatkiewicz'

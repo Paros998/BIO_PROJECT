@@ -8,11 +8,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
+import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -28,14 +32,20 @@ import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.REF
 @RequiredArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private static final boolean POST_ONLY = true;
+    private final SecurityContextHolderStrategy securityContextHolderStrategy = SecurityContextHolder
+            .getContextHolderStrategy();
+
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+    private final AuthenticationEntryPointFailureHandler failureHandler;
     private final String secretKey;
 
     @Override
-    public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response) throws AuthenticationException {
-        if (POST_ONLY && !request.getMethod().equals("POST"))
+    public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response)
+            throws AuthenticationException {
+        if (POST_ONLY && !request.getMethod().equals("POST")) {
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        }
 
         String username = this.obtainUsername(request);
         username = username != null ? username : "";
@@ -53,8 +63,21 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     }
 
     @Override
-    protected void successfulAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response, final @NonNull FilterChain chain,
-                                            final @NonNull Authentication authResult) throws IOException, ServletException {
+    protected void unsuccessfulAuthentication(final HttpServletRequest request, final HttpServletResponse response,
+                                              final AuthenticationException failed)
+            throws IOException, ServletException {
+        this.securityContextHolderStrategy.clearContext();
+        this.logger.trace("Failed to process authentication request", failed);
+        this.logger.trace("Cleared SecurityContextHolder");
+        this.logger.trace("Handling authentication failure");
+        this.getRememberMeServices().loginFail(request, response);
+        this.failureHandler.onAuthenticationFailure(request, response, failed);
+    }
+
+    @Override
+    protected void successfulAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response,
+                                            final @NonNull FilterChain chain, final @NonNull Authentication authResult)
+            throws IOException, ServletException {
         try {
             final String username = this.obtainUsername(request);
 
@@ -84,10 +107,11 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
             response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
-            if (e.equals(new IOException(e.getMessage())))
+            if (e.equals(new IOException(e.getMessage()))) {
                 throw new IOException(e.getMessage());
-
-            else throw new ServletException(e.getMessage());
+            } else {
+                throw new ServletException(e.getMessage());
+            }
         }
     }
 }

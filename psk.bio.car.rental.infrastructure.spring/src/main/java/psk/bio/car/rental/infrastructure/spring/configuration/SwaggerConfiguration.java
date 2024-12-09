@@ -30,6 +30,7 @@ public class SwaggerConfiguration {
                 .pathsToExclude("/")
                 .build();
     }
+
     @Bean
     public GroupedOpenApi apiV1() {
         return GroupedOpenApi.builder()
