@@ -12,6 +12,7 @@ car-rental:
             last-name: 'Dylan'
             phone-number: '887102990'
             national-id: '92102005998'
+            first-login-done: true
             enabled: true
             employee-identifier: 'ADM-1'
         employees:
@@ -21,6 +22,7 @@ car-rental:
             last-name: 'Taylor'
             phone-number: '777102990'
             national-id: '82102005998'
+            first-login-done: true
             enabled: true
             employee-identifier: 'EMP-1'
         clients:
@@ -30,4 +32,5 @@ car-rental:
             last-name: 'Bohatkiewicz'
             phone-number: '667102990'
             national-id: '86102005998'
+            first-login-done: true
             enabled: true

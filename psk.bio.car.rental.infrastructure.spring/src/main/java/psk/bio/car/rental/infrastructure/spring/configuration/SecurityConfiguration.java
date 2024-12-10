@@ -105,15 +105,20 @@ public class SecurityConfiguration {
                         )
                         .permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/api/users/register", "/login")
+                        .anonymous()
+
+                        .requestMatchers(
+                                "/api/users/{userId}",
+                                "/api/users/finish-register/{userId}"
+                        )
+                        .hasRole(UserRole.CLIENT.name())
+
                         .requestMatchers(
                                 "/api/users"
                         )
                         .hasRole(UserRole.ADMIN.name())
                 )
-
-                //  API
-                .authorizeHttpRequests(requests -> requests
-                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register", "/login").anonymous())
 
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

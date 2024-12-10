@@ -23,6 +23,8 @@ public interface UserProjection extends UserDetails {
 
     Boolean isActive();
 
+    Boolean isFirstLogin();
+
     @Override
     default Collection<? extends GrantedAuthority> getAuthorities() {
         final Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();

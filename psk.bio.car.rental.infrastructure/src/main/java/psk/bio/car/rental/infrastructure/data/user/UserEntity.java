@@ -49,6 +49,8 @@ public class UserEntity implements UserProjection {
 
     protected Boolean enabled;
 
+    protected Boolean firstLoginDone;
+
     @Enumerated(EnumType.STRING)
     protected UserRole role;
 
@@ -58,6 +60,11 @@ public class UserEntity implements UserProjection {
     @Override
     public Boolean isActive() {
         return enabled;
+    }
+
+    @Override
+    public Boolean isFirstLogin() {
+        return !firstLoginDone;
     }
 
     @Override
@@ -73,7 +80,8 @@ public class UserEntity implements UserProjection {
                 && Objects.equals(email, that.email) && Objects.equals(firstName, that.firstName)
                 && Objects.equals(lastName, that.lastName) && Objects.equals(phoneNumber, that.phoneNumber)
                 && Objects.equals(nationalId, that.nationalId) && Objects.equals(enabled, that.enabled)
-                && role == that.role && Objects.equals(permissions, that.permissions);
+                && Objects.equals(firstLoginDone, that.firstLoginDone) && role == that.role
+                && Objects.equals(permissions, that.permissions);
     }
 
     @Override
