@@ -19,7 +19,7 @@ public interface VehicleRepository {
     Optional<Vehicle> findVehicleByPlate(String plate);
 
     List<Vehicle> findAllVehicles();
-//
+
 //    Optional<RentedVehicle> findById(UUID id);
 //
 //    Optional<RentedVehicle> findByModel(String model);

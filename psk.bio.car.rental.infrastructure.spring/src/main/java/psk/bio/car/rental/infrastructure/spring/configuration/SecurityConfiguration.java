@@ -105,7 +105,9 @@ public class SecurityConfiguration {
                         )
                         .permitAll()
 
-                        .requestMatchers(HttpMethod.POST, "/api/users/register", "/login")
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/users/register", "/login")
                         .anonymous()
 
                         .requestMatchers(
@@ -113,6 +115,16 @@ public class SecurityConfiguration {
                                 "/api/users/finish-register/{userId}"
                         )
                         .hasRole(UserRole.CLIENT.name())
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/vehicles**"
+                        )
+                        .hasRole(UserRole.CLIENT.name())
+
+                        .requestMatchers(
+                                "/api/vehicles**"
+                        ).hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(
                                 "/api/users"

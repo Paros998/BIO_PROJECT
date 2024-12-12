@@ -50,6 +50,8 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     @Column(nullable = false)
     private String color;
 
+    private BigDecimal rentPerDayPrice;
+
     private String externalInsuranceId;
 
     @Column(nullable = false)
@@ -176,13 +178,18 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     }
 
     @Override
-    public String getVehicleId() {
-        return id.toString();
+    public UUID getVehicleId() {
+        return id;
+    }
+
+    @Override
+    public BigDecimal getRentPrice() {
+        return rentPerDayPrice;
     }
 
     @Override
     public boolean isRented() {
-        return getCurrentRental() != null;
+        return getCurrentRental() != null && state != VehicleState.RENTED;
     }
 
     @Override

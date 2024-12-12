@@ -1,9 +1,11 @@
 package psk.bio.car.rental.application.vehicle;
 
+import java.math.BigDecimal;
 import java.time.Year;
+import java.util.UUID;
 
 public interface Vehicle {
-    String getVehicleId();
+    UUID getVehicleId();
 
     String getPlate();
 
@@ -14,6 +16,8 @@ public interface Vehicle {
     Year getYearOfProduction();
 
     VehicleState getState();
+
+    BigDecimal getRentPrice();
 
     boolean isRented();
 }
