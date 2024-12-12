@@ -35,3 +35,4 @@ replay_pid*
 #Local configurations
 .env
 initial_users.yaml
+initial_vehicles.yaml

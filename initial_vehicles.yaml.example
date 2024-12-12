@@ -1,40 +1,4 @@
-SHOW_SQL: true
-
 car-rental:
-  users:
-    starter:
-      enabled: true
-      data:
-        admins:
-          - password: 'Admin123321_#@!'
-            email: 'admin_1@rental.com'
-            first-name: 'Bob'
-            last-name: 'Dylan'
-            phone-number: '887102990'
-            national-id: '92102005998'
-            first-login-done: true
-            enabled: true
-            employee-identifier: 'ADM-1'
-        employees:
-          - password: 'Employee123321_#@!'
-            email: 'employee_1@rental.com'
-            first-name: 'Mike'
-            last-name: 'Taylor'
-            phone-number: '777102990'
-            national-id: '82102005998'
-            first-login-done: true
-            enabled: true
-            employee-identifier: 'EMP-1'
-        clients:
-          - password: 'Client123321_#@!'
-            email: 'm.bohatko@gmail.com'
-            first-name: 'Marcin'
-            last-name: 'Bohatkiewicz'
-            phone-number: '667102990'
-            national-id: '86102005998'
-            first-login-done: true
-            enabled: true
-
   vehicles:
     starter:
       enabled: true

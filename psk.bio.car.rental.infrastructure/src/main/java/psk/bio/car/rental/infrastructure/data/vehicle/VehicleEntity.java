@@ -14,6 +14,7 @@ import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
@@ -40,19 +41,23 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     )
     private UUID id;
 
+    @Column(unique = true, nullable = false)
     private String plate;
 
+    @Column(nullable = false)
     private String model;
 
+    @Column(nullable = false)
     private String color;
 
     private String externalInsuranceId;
 
+    @Column(nullable = false)
     private Year yearOfProduction;
 
-    private LocalDateTime ensuredOnDate;
+    private LocalDate ensuredOnDate;
 
-    private LocalDateTime ensuredDueDate;
+    private LocalDate ensuredDueDate;
 
     @Enumerated(EnumType.STRING)
     private VehicleState state;
@@ -76,7 +81,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     private List<RentalEntity> vehicleRentals = new ArrayList<>();
 
     @Override
-    public ReadyToRentVehicle finishRepairs(final @NonNull BigDecimal totalCost, final @NonNull LocalDateTime dueDate,
+    public ReadyToRentVehicle finishRepairs(final @NonNull BigDecimal totalCost, final @NonNull LocalDate dueDate,
                                             final String chargedClientId) {
         this.lastEndRepairDate = LocalDateTime.now();
         var client = ClientEntity.builder()
@@ -96,7 +101,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     }
 
     @Override
-    public ReadyToRentVehicle finishRepairs(final @NonNull BigDecimal totalCost, final @NonNull LocalDateTime dueDate) {
+    public ReadyToRentVehicle finishRepairs(final @NonNull BigDecimal totalCost, final @NonNull LocalDate dueDate) {
         this.lastEndRepairDate = LocalDateTime.now();
         var payment = PaymentEntity.builder()
                 .status(PaymentStatus.PENDING)
@@ -111,9 +116,9 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     }
 
     @Override
-    public ReadyToRentVehicle insureVehicle(final String insuranceId, final LocalDateTime dueDate) {
+    public ReadyToRentVehicle insureVehicle(final String insuranceId, final LocalDate dueDate) {
         this.externalInsuranceId = insuranceId;
-        this.ensuredOnDate = LocalDateTime.now();
+        this.ensuredOnDate = LocalDate.now();
         this.ensuredDueDate = dueDate;
         this.state = VehicleState.READY_TO_RENT;
         return this;

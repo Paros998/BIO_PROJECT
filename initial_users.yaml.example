@@ -13,6 +13,7 @@ car-rental:
             first-login-done: true
             enabled: true
             employee-identifier: 'ADM-1'
+
           - password: 'Admin123321_#@!'
             email: 'admin_2@rental.com'
             first-name: 'Bob'
@@ -22,6 +23,7 @@ car-rental:
             first-login-done: true
             enabled: true
             employee-identifier: 'ADM-2'
+
         employees:
           - password: 'Employee123321_#@!'
             email: 'employee_1@rental.com'
@@ -32,6 +34,7 @@ car-rental:
             first-login-done: true
             enabled: true
             employee-identifier: 'EMP-1'
+
         clients:
           - password: 'Client123321_#@!'
             email: 'm.bohatko@gmail.com'

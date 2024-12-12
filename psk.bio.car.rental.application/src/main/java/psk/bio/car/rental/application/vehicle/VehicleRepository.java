@@ -1,5 +1,8 @@
 package psk.bio.car.rental.application.vehicle;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface VehicleRepository {
     Vehicle save(NewVehicle vehicle);
 
@@ -11,8 +14,11 @@ public interface VehicleRepository {
 
     Vehicle save(ReturnedVehicle vehicle);
 
-    // TODO rework rest
-//    Collection<RentedVehicle> findAllVehicles();
+    // -----------------------------------
+
+    Optional<Vehicle> findVehicleByPlate(String plate);
+
+    List<Vehicle> findAllVehicles();
 //
 //    Optional<RentedVehicle> findById(UUID id);
 //

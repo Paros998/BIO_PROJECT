@@ -15,7 +15,7 @@ spring:
   thymeleaf:
     check-template-location: false
   config:
-    import: optional:file:.env[.properties],optional:file:initial_users.yaml
+    import: optional:file:.env[.properties],optional:file:initial_users.yaml,optional:file:initial_vehicles.yaml
   profiles:
     default: DEFAULT
     active: DEFAULT,SECURE
