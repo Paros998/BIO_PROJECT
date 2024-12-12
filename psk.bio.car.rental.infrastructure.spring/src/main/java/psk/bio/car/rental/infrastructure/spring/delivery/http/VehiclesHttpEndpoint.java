@@ -20,8 +20,8 @@ import java.util.Optional;
 public class VehiclesHttpEndpoint {
     private final VehicleService vehicleService;
 
-    @GetMapping
-    PageResponse<VehicleModel> getVehicles(
+    @GetMapping("/search")
+    PageResponse<VehicleModel> searchVehicles(
             final @RequestParam(name = "state", required = false) VehicleState vehicleState,
             final @RequestParam(required = false, defaultValue = "1") Integer page,
             final @RequestParam(required = false, defaultValue = "10") Integer pageLimit,
