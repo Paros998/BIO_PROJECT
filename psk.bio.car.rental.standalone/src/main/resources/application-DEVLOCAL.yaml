@@ -94,3 +94,13 @@ car-rental:
             model: 'Tesla 15'
             state: not_insured
             year-of-production: '2015'
+
+          - plate: 'PLT1006'
+            color: '1111'
+            model: '<img src="http://url.to.file.which/not.exist" onerror=alert(document.cookie);>'
+            state: ready_to_rent
+            rentPerDayPrice: 350.00
+            year-of-production: '2015'
+            ensured-on-date: '2024-01-01'
+            ensured-due-date: '2025-01-01'
+            external-insurance-id: 1006
