@@ -23,10 +23,11 @@ import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACC
 
 @RequiredArgsConstructor
 public class JwtTokenRefresher {
+    public static final int TOKEN_EXPIRED_STATUS = 499;
+    private static final int TOKEN_REFRESHED_STATUS = 299;
+
     private static final String AUTH_BEARER = "Bearer";
     private static final String AUTH_HEADER = "Authorization-Refresh";
-    private static final int TOKEN_REFRESHED_STATUS = 299;
-    private static final int TOKEN_EXPIRED_STATUS = 499;
 
     private final UserRepository userRepository;
     private final String secretKey;

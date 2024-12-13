@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +28,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACCESS_TOKEN;
-import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.REFRESH_TOKEN;
 
 @RequiredArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -39,6 +39,9 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final UserRepository userRepository;
     private final AuthenticationEntryPointFailureHandler failureHandler;
     private final String secretKey;
+
+    @Value("${jwt.expire:0}")
+    private Integer jwtExpirationInMillis;
 
     @Override
     public Authentication attemptAuthentication(final @NonNull HttpServletRequest request, final @NonNull HttpServletResponse response)
@@ -85,26 +88,28 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
                     .map(UserProjection::getUserId)
                     .orElseThrow();
 
+            final Integer jwtExpire = jwtExpirationInMillis == 0 ? ACCESS_TOKEN.getAmount() : jwtExpirationInMillis;
+
             String accessToken = Jwts.builder()
                     .setSubject(authResult.getName())
                     .claim("authorities", authResult.getAuthorities())
                     .claim("userId", userId)
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN.getAmount()))
+                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpire))
                     .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
                     .compact();
 
-            String refreshToken = Jwts.builder()
-                    .setSubject(authResult.getName())
-                    .claim("userId", userId)
-                    .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN.getAmount()))
-                    .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
-                    .compact();
+//            String refreshToken = Jwts.builder()
+//                    .setSubject(authResult.getName())
+//                    .claim("userId", userId)
+//                    .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN.getAmount()))
+//                    .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)))
+//                    .compact();
 
 
             response.addHeader("Authorization", "Bearer " + accessToken);
 
-            response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
+//            response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
             if (e.equals(new IOException(e.getMessage()))) {

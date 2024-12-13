@@ -1,5 +1,8 @@
 SHOW_SQL: true
 
+jwt:
+  expire: 999999999
+
 car-rental:
   users:
     starter:
