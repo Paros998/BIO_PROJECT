@@ -83,6 +83,7 @@ car-rental:
             color: '1111'
             model: 'Tesla 14'
             state: ready_to_rent
+            rentPerDayPrice: 350.00
             year-of-production: '2014'
             ensured-on-date: '2024-01-01'
             ensured-due-date: '2025-01-01'
