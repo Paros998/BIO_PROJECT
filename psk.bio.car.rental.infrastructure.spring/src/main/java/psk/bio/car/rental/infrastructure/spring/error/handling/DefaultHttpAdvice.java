@@ -42,6 +42,7 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilter
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(responseStream, response);
         responseStream.flush();
+        // TODO try using that for inner filter errors thrown
     }
 
     @SneakyThrows
