@@ -12,13 +12,14 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.assertj.core.util.Strings;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.server.ResponseStatusException;
+import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -33,6 +34,7 @@ import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefre
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final String secretKey;
     private final JwtTokenRefresher tokenRefresher;
+    private final CustomFilterAdvice customFilterAdvice;
 
     @Override
     protected void doFilterInternal(final @NonNull HttpServletRequest request,
@@ -66,10 +68,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             } catch (final Exception e) {
                 if (e.getClass().equals(ExpiredJwtException.class)) {
 //                    tokenRefresher.attemptRefreshToken(request, response);
-                    throw new ResponseStatusException(HttpStatusCode.valueOf(TOKEN_EXPIRED_STATUS),
-                            String.format("Token %s has expired, please login again", token));
+                    response.sendError(HttpStatusCode.valueOf(TOKEN_EXPIRED_STATUS).value(),
+                            customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
                 } else {
-                    throw new IllegalStateException(String.format("Token %s cannot be trusted", token));
+                    response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                            customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
                 }
             }
         }

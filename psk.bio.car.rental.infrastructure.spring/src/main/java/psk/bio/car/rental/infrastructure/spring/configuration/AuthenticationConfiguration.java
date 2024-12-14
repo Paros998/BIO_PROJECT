@@ -10,6 +10,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.spring.authentication.UserDaoAuthenticationProvider;
+import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
 import psk.bio.car.rental.infrastructure.spring.filters.formlogin.FormLoginAuthenticationFilter;
 import psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenFilter;
 import psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefresher;
@@ -25,17 +26,26 @@ public class AuthenticationConfiguration {
     }
 
     @Bean
-    public FormLoginAuthenticationFilter formLoginAuthenticationFilter(final UserRepository userRepository,
-                                                                       final AuthenticationManager authenticationManager,
-                                                                       final AuthenticationEntryPointFailureHandler failureHandler) {
-        final var filter = new FormLoginAuthenticationFilter(authenticationManager, userRepository, failureHandler, jwtSecret);
+    public FormLoginAuthenticationFilter formLoginAuthenticationFilter(
+            final UserRepository userRepository,
+            final AuthenticationManager authenticationManager,
+            final AuthenticationEntryPointFailureHandler failureHandler,
+            final @Qualifier("customHttpAdvice") CustomFilterAdvice customFilterAdvice
+    ) {
+        final var filter = new FormLoginAuthenticationFilter(authenticationManager,
+                userRepository,
+                failureHandler,
+                customFilterAdvice,
+                jwtSecret);
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
 
     @Bean
-    public JwtTokenFilter jwtTokenFilter(final JwtTokenRefresher jwtTokenRefresher) {
-        return new JwtTokenFilter(jwtSecret, jwtTokenRefresher);
+    public JwtTokenFilter jwtTokenFilter(
+            final JwtTokenRefresher jwtTokenRefresher,
+            final @Qualifier("customHttpAdvice") CustomFilterAdvice customFilterAdvice) {
+        return new JwtTokenFilter(jwtSecret, jwtTokenRefresher, customFilterAdvice);
     }
 
     @Bean

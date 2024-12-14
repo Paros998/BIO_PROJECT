@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,10 +25,12 @@ import java.io.OutputStream;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
+@RequiredArgsConstructor
 @Component("customHttpAdvice")
 @Profile(ApplicationProfile.UNSECURE_ERRORS)
 @ControllerAdvice(basePackages = "psk.bio.car")
-public class UnsecureHttpAdvice implements AuthenticationEntryPoint {
+public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilterAdvice {
+    private final ObjectMapper objectMapper;
 
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
@@ -38,6 +42,23 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(responseStream, response);
         responseStream.flush();
+    }
+
+    @SneakyThrows
+    @Override
+    public String mapExceptionToJson(final @NonNull Exception exception, final String path) {
+        ErrorResponse errorResponse;
+        if (exception instanceof ResponseStatusException rse) {
+            HttpStatus httpStatus = HttpStatus.resolve(rse.getStatusCode().value());
+            if (httpStatus == null) {
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            errorResponse = mapToErrorResponse(httpStatus, exception, path);
+        } else {
+            errorResponse = mapToErrorResponse(exception, path);
+        }
+
+        return objectMapper.writeValueAsString(errorResponse);
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -79,7 +100,7 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint {
     }
 
     private ErrorResponse mapToErrorResponse(final @NonNull HttpStatus status, final @NonNull Exception exception,
-                                             final @NonNull String path) {
+                                             final String path) {
         return ErrorResponse.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .timestamp(LocalDateTime.now())

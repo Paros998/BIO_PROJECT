@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +21,7 @@ import org.springframework.security.web.authentication.AuthenticationEntryPointF
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
+import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,6 +39,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final AuthenticationEntryPointFailureHandler failureHandler;
+    private final CustomFilterAdvice customFilterAdvice;
     private final String secretKey;
 
     @Value("${jwt.expire:0}")
@@ -112,11 +114,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
 //            response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
-            if (e.equals(new IOException(e.getMessage()))) {
-                throw new IOException(e.getMessage());
-            } else {
-                throw new ServletException(e.getMessage());
-            }
+            response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
         }
     }
 }
