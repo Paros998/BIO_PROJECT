@@ -1,4 +1,5 @@
 SHOW_SQL: true
+JWT_SECRET: absfol7814lqmva7891294nn9asa783nr293urnq9adm38ry2
 
 jwt:
   expire: 999999999

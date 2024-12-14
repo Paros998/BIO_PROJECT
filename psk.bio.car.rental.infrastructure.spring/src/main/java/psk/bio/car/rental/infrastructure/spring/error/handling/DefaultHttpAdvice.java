@@ -1,9 +1,11 @@
 package psk.bio.car.rental.infrastructure.spring.error.handling;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
+import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefresher.TOKEN_EXPIRED_STATUS;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,30 +16,60 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import psk.bio.car.rental.api.errors.ErrorCode;
 import psk.bio.car.rental.api.errors.SecureErrorResponse;
 import psk.bio.car.rental.application.profiles.ApplicationProfile;
 import psk.bio.car.rental.application.security.exceptions.BusinessException;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
-
+@RequiredArgsConstructor
 @Component("customHttpAdvice")
 @Profile(ApplicationProfile.SECURE_ERRORS)
 @ControllerAdvice(basePackages = "psk.bio.car")
-public class DefaultHttpAdvice implements AuthenticationEntryPoint {
+public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilterAdvice  {
+    private final ObjectMapper objectMapper;
 
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
             throws IOException {
-        var response = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, authException.getMessage());
-        res.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        res.setStatus(HttpStatus.UNAUTHORIZED.value());
-        OutputStream responseStream = res.getOutputStream();
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(responseStream, response);
+        var errorResponse = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, authException.getMessage());
+        writeResponse(res, errorResponse);
+    }
+
+    @Override
+    public void commence(final HttpServletRequest request, final HttpServletResponse res, final Exception exception) throws IOException {
+        var errorResponse = mapExceptionToJson(exception);
+        writeResponse(res, errorResponse);
+    }
+
+    private void writeResponse(final HttpServletResponse response, final SecureErrorResponse errorResponse) throws IOException {
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setStatus(errorResponse.getStatus());
+        OutputStream responseStream = response.getOutputStream();
+        objectMapper.writeValue(responseStream, errorResponse);
         responseStream.flush();
+    }
+
+    private SecureErrorResponse mapExceptionToJson(final @NonNull Exception exception) {
+        if (exception instanceof ExpiredJwtException e){
+            return mapToSecureErrorResponse(TOKEN_EXPIRED_STATUS, null);
+        }
+        else if (exception instanceof ResponseStatusException rse) {
+            HttpStatus httpStatus = HttpStatus.resolve(rse.getStatusCode().value());
+            if (httpStatus == null) {
+                httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+            }
+            return mapToSecureErrorResponse(httpStatus, null);
+        } else {
+            return mapToSecureErrorResponse();
+        }
     }
 
     @ExceptionHandler(AuthenticationException.class)
@@ -85,4 +117,12 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint {
                 .build();
     }
 
+    private SecureErrorResponse mapToSecureErrorResponse(final Integer status, final String message) {
+        return SecureErrorResponse.builder()
+                .status(status)
+                .timestamp(LocalDateTime.now())
+                .code(ErrorCode.resolveCode(status).getCode())
+                .businessError(status.equals(HttpStatus.UNPROCESSABLE_ENTITY.value()) ? message : null)
+                .build();
+    }
 }

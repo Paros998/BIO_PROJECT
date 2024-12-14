@@ -1,13 +1,11 @@
 package psk.bio.car.rental.infrastructure.spring.filters.formlogin;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACCESS_TOKEN;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,15 +17,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.UUID;
-
-import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACCESS_TOKEN;
+import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
 
 @RequiredArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -38,6 +39,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final AuthenticationEntryPointFailureHandler failureHandler;
+    private final CustomFilterAdvice customFilterAdvice;
     private final String secretKey;
 
     @Value("${jwt.expire:0}")
@@ -112,11 +114,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
 //            response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
-            if (e.equals(new IOException(e.getMessage()))) {
-                throw new IOException(e.getMessage());
-            } else {
-                throw new ServletException(e.getMessage());
-            }
+            customFilterAdvice.commence(request, response, e);
         }
     }
 }
