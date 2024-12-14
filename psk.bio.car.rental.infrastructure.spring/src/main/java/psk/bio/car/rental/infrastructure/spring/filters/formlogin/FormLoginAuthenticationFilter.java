@@ -1,15 +1,13 @@
 package psk.bio.car.rental.infrastructure.spring.filters.formlogin;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACCESS_TOKEN;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,16 +17,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.authentication.AuthenticationEntryPointFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.UUID;
-
-import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtExpire.ACCESS_TOKEN;
 
 @RequiredArgsConstructor
 public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -114,7 +114,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
 //            response.addHeader("Authorization-Refresh", "Bearer " + refreshToken);
 
         } catch (final Exception e) {
-            response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(), customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
+            customFilterAdvice.commence(request, response, e);
         }
     }
 }

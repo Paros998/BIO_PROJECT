@@ -1,7 +1,20 @@
 package psk.bio.car.rental.infrastructure.spring.filters.jwt;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.assertj.core.util.Strings;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -11,24 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
-import org.assertj.core.util.Strings;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.OncePerRequestFilter;
 import psk.bio.car.rental.infrastructure.spring.error.handling.CustomFilterAdvice;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefresher.TOKEN_EXPIRED_STATUS;
 
 @AllArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -66,14 +62,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (final Exception e) {
-                if (e.getClass().equals(ExpiredJwtException.class)) {
-//                    tokenRefresher.attemptRefreshToken(request, response);
-                    response.sendError(HttpStatusCode.valueOf(TOKEN_EXPIRED_STATUS).value(),
-                            customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
-                } else {
-                    response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                            customFilterAdvice.mapExceptionToJson(e, request.getRequestURI()));
-                }
+                customFilterAdvice.commence(request, response, e);
             }
         }
         filterChain.doFilter(request, response);

@@ -135,7 +135,11 @@ public class SecurityConfiguration {
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(authenticationEntryPoint));
+                .exceptionHandling(configurer -> configurer
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
+
+        ;
 
         return http.build();
     }
