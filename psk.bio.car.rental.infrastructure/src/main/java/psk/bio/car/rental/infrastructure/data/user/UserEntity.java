@@ -51,6 +51,7 @@ public class UserEntity implements UserProjection {
 
     protected Boolean firstLoginDone;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     protected UserRole role;
 

@@ -42,7 +42,7 @@ public class FormLoginAuthenticationFilter extends UsernamePasswordAuthenticatio
     private final CustomFilterAdvice customFilterAdvice;
     private final String secretKey;
 
-    @Value("${jwt.expire:0}")
+    @Value("${jwt.expire:9999999}")
     private Integer jwtExpirationInMillis;
 
     @Override

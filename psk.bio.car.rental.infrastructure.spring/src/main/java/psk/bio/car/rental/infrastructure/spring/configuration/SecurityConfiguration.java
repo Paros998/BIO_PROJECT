@@ -19,9 +19,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.spring.filters.formlogin.FormLoginAuthenticationFilter;
 import psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenFilter;
+import psk.bio.car.rental.infrastructure.spring.security.SpringUserContextValidator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -67,6 +70,11 @@ public class SecurityConfiguration {
 
         var finalHierarchy = hierarchies.stream().reduce((s, s2) -> s.concat("\n" + s2)).orElse("");
         return RoleHierarchyImpl.fromHierarchy(finalHierarchy);
+    }
+
+    @Bean
+    public UserContextValidator userContextValidator(final @NonNull UserRepository userRepository) {
+        return new SpringUserContextValidator(userRepository);
     }
 
     @Bean
@@ -123,11 +131,13 @@ public class SecurityConfiguration {
                         .hasRole(UserRole.CLIENT.name())
 
                         .requestMatchers(
-                                "/api/vehicles/**"
+                                "/api/vehicles/**",
+                                "/api/employees/**"
                         ).hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(
-                                "/api/users"
+                                "/api/users",
+                                "/api/admins/**"
                         )
                         .hasRole(UserRole.ADMIN.name())
                 )
@@ -137,9 +147,7 @@ public class SecurityConfiguration {
 
                 .exceptionHandling(configurer -> configurer
                         .authenticationEntryPoint(authenticationEntryPoint)
-                )
-
-        ;
+                );
 
         return http.build();
     }

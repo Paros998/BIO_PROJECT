@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
+import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.user.ClientService;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -23,6 +24,7 @@ public class ClientServiceImpl implements ClientService {
     private final UserRepository userRepository;
     private final ClientJpaRepository clientRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserContextValidator userContextValidator;
 
     @Override
     @Transactional
@@ -44,7 +46,8 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     @Transactional
-    public void finishRegistration(final UUID userId, final @NonNull FinishRegisterRequest request) {
+    public void finishRegistration(final @NonNull UUID userId, final @NonNull FinishRegisterRequest request) {
+        userContextValidator.checkUserPerformingAction(userId);
         final Optional<ClientEntity> clientBox = clientRepository.findById(userId);
 
         if (clientBox.isEmpty()) {
