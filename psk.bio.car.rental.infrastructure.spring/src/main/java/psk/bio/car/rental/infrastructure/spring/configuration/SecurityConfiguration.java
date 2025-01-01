@@ -132,12 +132,13 @@ public class SecurityConfiguration {
 
                         .requestMatchers(
                                 "/api/vehicles/**",
-                                "/api/employees/**"
+                                "/api/employees/finish-first-login"
                         ).hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(
                                 "/api/users",
-                                "/api/admins/**"
+                                "/api/admins/**",
+                                "/api/employees/**"
                         )
                         .hasRole(UserRole.ADMIN.name())
                 )
