@@ -5,9 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
@@ -23,20 +21,23 @@ import java.util.Objects;
 @Entity(name = "clients")
 @Table(name = "clients")
 @ToString(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder
 public class ClientEntity extends UserEntity {
 
     @JsonManagedReference
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     private List<RentalEntity> rentedVehicles = new ArrayList<>();
 
     @JsonManagedReference
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "chargedClient", fetch = FetchType.LAZY)
     private List<PaymentEntity> clientPayments = new ArrayList<>();
 
-    public ClientEntity() {
+    public void build() {
         this.role = UserRole.CLIENT;
     }
 

@@ -59,6 +59,7 @@ public class RentalEntity implements RentalProjection {
     @JsonBackReference
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY)
+    @Builder.Default
     private List<PaymentEntity> associatedPayments = new ArrayList<>();
 
     @Override

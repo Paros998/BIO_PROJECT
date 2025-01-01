@@ -1,5 +1,6 @@
 package psk.bio.car.rental.infrastructure.data.vehicle;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -72,11 +73,13 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     private LocalDateTime lastEndRentDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "associatedVehicle", fetch = FetchType.LAZY)
     @Builder.Default
     @ToString.Exclude
     private List<PaymentEntity> vehicleAssociatedPayments = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
     @Builder.Default
     @ToString.Exclude

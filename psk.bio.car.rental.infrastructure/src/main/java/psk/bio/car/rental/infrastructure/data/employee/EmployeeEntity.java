@@ -2,14 +2,14 @@ package psk.bio.car.rental.infrastructure.data.employee;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import psk.bio.car.rental.application.security.UserRole;
+import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.user.UserEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,17 +19,25 @@ import java.util.Objects;
 @Entity(name = "employees")
 @Table(name = "employees")
 @ToString(callSuper = true)
+@NoArgsConstructor
 @SuperBuilder
 public class EmployeeEntity extends UserEntity {
     @Column(unique = true, nullable = false)
     private String employeeIdentifier;
 
     @JsonManagedReference
-    @ToString.Exclude
     @OneToMany(mappedBy = "participatingEmployee", fetch = FetchType.LAZY)
-    private List<RentalEntity> rentedVehicles;
+    @Builder.Default
+    @ToString.Exclude
+    private List<RentalEntity> rentedVehicles = new ArrayList<>();
 
-    public EmployeeEntity() {
+    @JsonManagedReference
+    @OneToMany(mappedBy = "createdByEmployee", fetch = FetchType.LAZY)
+    @Builder.Default
+    @ToString.Exclude
+    private List<PaymentEntity> createdPayments = new ArrayList<>();
+
+    public void build() {
         this.role = UserRole.EMPLOYEE;
     }
 
@@ -45,11 +53,13 @@ public class EmployeeEntity extends UserEntity {
             return false;
         }
         EmployeeEntity that = (EmployeeEntity) o;
-        return Objects.equals(employeeIdentifier, that.employeeIdentifier) && Objects.equals(rentedVehicles, that.rentedVehicles);
+        return Objects.equals(employeeIdentifier, that.employeeIdentifier)
+                && Objects.equals(rentedVehicles, that.rentedVehicles)
+                && Objects.equals(createdPayments, that.createdPayments);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), employeeIdentifier, rentedVehicles);
+        return Objects.hash(super.hashCode(), employeeIdentifier, rentedVehicles, createdPayments);
     }
 }
