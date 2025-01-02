@@ -18,7 +18,6 @@ import java.util.UUID;
 
 import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.USER_WITH_SAME_USERNAME_ALREADY_EXISTS;
 
-
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
