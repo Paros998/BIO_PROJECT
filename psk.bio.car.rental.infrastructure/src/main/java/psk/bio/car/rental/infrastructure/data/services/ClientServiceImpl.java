@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
 import psk.bio.car.rental.application.security.UserContextValidator;
+import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.ClientService;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -34,12 +35,13 @@ public class ClientServiceImpl implements ClientService {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Email already registered.");
         }
 
-        final ClientEntity client = new ClientEntity();
-
-        client.setEmail(email);
-        client.setPassword(passwordEncoder.encode(password));
-        client.setEnabled(Boolean.TRUE);
-        client.setFirstLoginDone(Boolean.FALSE);
+        final ClientEntity client = ClientEntity.builder()
+                .role(UserRole.CLIENT)
+                .email(email)
+                .password(passwordEncoder.encode(password))
+                .enabled(Boolean.TRUE)
+                .firstLoginDone(Boolean.FALSE)
+                .build();
 
         return clientRepository.save(client).getUserId();
     }

@@ -2,10 +2,8 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.employees.CreateEmployeeRequest;
 import psk.bio.car.rental.application.admin.AdminService;
 import psk.bio.car.rental.application.security.UserRole;

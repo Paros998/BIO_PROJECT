@@ -19,7 +19,6 @@ import java.util.Objects;
 @Entity(name = "employees")
 @Table(name = "employees")
 @ToString(callSuper = true)
-@NoArgsConstructor
 @SuperBuilder
 public class EmployeeEntity extends UserEntity {
     @Column(unique = true, nullable = false)
@@ -37,7 +36,7 @@ public class EmployeeEntity extends UserEntity {
     @ToString.Exclude
     private List<PaymentEntity> createdPayments = new ArrayList<>();
 
-    public void build() {
+    public EmployeeEntity() {
         this.role = UserRole.EMPLOYEE;
     }
 
