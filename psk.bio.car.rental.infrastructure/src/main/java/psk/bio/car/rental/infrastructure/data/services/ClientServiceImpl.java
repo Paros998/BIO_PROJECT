@@ -82,6 +82,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void setClientActiveState(final @NonNull UUID clientId, final boolean newState) {
         final ClientEntity client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
