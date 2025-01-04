@@ -10,6 +10,8 @@ import psk.bio.car.rental.api.employees.FinishFirstLoginRequest;
 import psk.bio.car.rental.application.employee.EmployeeService;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @RequestMapping("/api/employees")
 @RestController
@@ -23,6 +25,11 @@ public class EmployeeHttpEndpoint {
                                                       final @RequestParam(required = false, defaultValue = "firstName") String sortBy) {
         final PageRequest pageRequest = PageMapper.toPageRequest(page, pageLimit, sortDir, sortBy);
         return employeeService.fetchEmployees(pageRequest);
+    }
+
+    @PostMapping("/{userId}/activate")
+    public void setEmployeeActiveState(final @PathVariable("userId") UUID employeeId, final @RequestParam Boolean setActive) {
+        employeeService.setEmployeeActiveState(employeeId, setActive);
     }
 
     @PostMapping("/finish-first-login")

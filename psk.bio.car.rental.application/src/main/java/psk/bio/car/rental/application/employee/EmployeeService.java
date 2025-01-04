@@ -10,4 +10,6 @@ public interface EmployeeService {
     void finishFirstLogin(UUID employeeId, String newPassword);
 
     PageResponse<EmployeeModel> fetchEmployees(PageRequest pageRequest);
+
+    void setEmployeeActiveState(UUID employeeId, boolean newState);
 }

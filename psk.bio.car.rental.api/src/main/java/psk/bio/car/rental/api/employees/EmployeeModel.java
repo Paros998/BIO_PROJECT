@@ -14,11 +14,13 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class EmployeeModel implements Serializable {
     private UUID userId;
-    private UUID employeeId;
+    private String employeeId;
     private String email;
     private Boolean isActive;
+    private Boolean firstLoginDone;
     private String firstName;
     private String lastName;
     private String phoneNumber;
     private String nationalId;
+    private Boolean isAdmin;
 }

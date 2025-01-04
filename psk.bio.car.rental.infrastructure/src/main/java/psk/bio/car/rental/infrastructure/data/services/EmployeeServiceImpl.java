@@ -12,6 +12,7 @@ import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.employees.EmployeeModel;
 import psk.bio.car.rental.application.employee.EmployeeService;
 import psk.bio.car.rental.application.security.UserContextValidator;
+import psk.bio.car.rental.infrastructure.data.admin.AdminEntity;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageRequest;
 import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageResponse;
@@ -49,9 +50,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         return PageMapper.toPageResponse(employees, this::toEmployeeModel);
     }
 
+    @Override
+    @Transactional
+    public void setEmployeeActiveState(final @NonNull UUID employeeId, final boolean newState) {
+        final EmployeeEntity employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
+
+        employee.setEnabled(newState);
+        employeeRepository.save(employee);
+    }
+
     private EmployeeModel toEmployeeModel(final @NonNull EmployeeEntity employee) {
         return EmployeeModel.builder()
-
+                .userId(employee.getUserId())
+                .employeeId(employee.getEmployeeIdentifier())
+                .email(employee.getEmail())
+                .firstName(employee.getFirstName())
+                .lastName(employee.getLastName())
+                .phoneNumber(employee.getPhoneNumber())
+                .nationalId(employee.getNationalId())
+                .isActive(employee.isActive())
+                .firstLoginDone(employee.getFirstLoginDone())
+                .isAdmin(employee instanceof AdminEntity)
                 .build();
     }
 }
