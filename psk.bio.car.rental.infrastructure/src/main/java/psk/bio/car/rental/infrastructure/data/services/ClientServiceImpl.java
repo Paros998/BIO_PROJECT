@@ -7,7 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import psk.bio.car.rental.api.clients.ClientModel;
+import psk.bio.car.rental.api.common.paging.PageRequest;
+import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
+import psk.bio.car.rental.application.payments.PaymentStatus;
+import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.ClientService;
@@ -15,6 +20,9 @@ import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
+import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
+import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageRequest;
+import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageResponse;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -63,5 +71,40 @@ public class ClientServiceImpl implements ClientService {
         client.setNationalId(request.getNationalId());
         client.setFirstLoginDone(Boolean.TRUE);
         clientRepository.save(client);
+    }
+
+    @Override
+    public PageResponse<ClientModel> fetchClients(final @NonNull PageRequest pageRequest) {
+        final SpringPageRequest springPageRequest = PageMapper.toSpringPageRequest(pageRequest);
+        final SpringPageResponse<ClientEntity> clients
+                = new SpringPageResponse<>(clientRepository.findAll(springPageRequest.getRequest(ClientEntity.class)));
+        return PageMapper.toPageResponse(clients, this::toClientModel);
+    }
+
+    @Override
+    public void setClientActiveState(final @NonNull UUID clientId, final boolean newState) {
+        final ClientEntity client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        client.setEnabled(newState);
+        clientRepository.save(client);
+    }
+
+    private ClientModel toClientModel(final @NonNull ClientEntity client) {
+        return ClientModel.builder()
+                .userId(client.getUserId())
+                .email(client.getEmail())
+                .firstName(client.getFirstName())
+                .lastName(client.getLastName())
+                .phoneNumber(client.getPhoneNumber())
+                .nationalId(client.getNationalId())
+                .isActive(client.isActive())
+                .firstLoginDone(client.getFirstLoginDone())
+                .rentedCarsCount((int) client.getRentedVehicles().stream()
+                        .filter(rentalEntity -> rentalEntity.getState().equals(RentalState.ACTIVE))
+                        .count())
+                .duePaymentsCount((int) client.getClientPayments().stream()
+                        .filter(paymentEntity -> paymentEntity.getStatus().equals(PaymentStatus.PENDING))
+                        .count())
+                .build();
     }
 }

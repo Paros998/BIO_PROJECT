@@ -43,7 +43,6 @@ public class ClientEntity extends UserEntity {
         this.role = UserRole.CLIENT;
     }
 
-
     @Override
     public boolean equals(final Object o) {
         if (this == o) {

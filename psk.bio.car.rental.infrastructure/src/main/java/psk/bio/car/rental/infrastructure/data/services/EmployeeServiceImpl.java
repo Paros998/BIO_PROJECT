@@ -44,7 +44,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageResponse<EmployeeModel> fetchEmployees(final PageRequest pageRequest) {
         final SpringPageRequest springPageRequest = PageMapper.toSpringPageRequest(pageRequest);
-
         final SpringPageResponse<EmployeeEntity> employees =
                 new SpringPageResponse<>(employeeRepository.findAll(springPageRequest.getRequest(EmployeeEntity.class)));
         return PageMapper.toPageResponse(employees, this::toEmployeeModel);
@@ -55,7 +54,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void setEmployeeActiveState(final @NonNull UUID employeeId, final boolean newState) {
         final EmployeeEntity employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found"));
-
         employee.setEnabled(newState);
         employeeRepository.save(employee);
     }
