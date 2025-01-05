@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RentalRepository {
-    List<RentalProjection> findByClient(String clientId);
+    List<Rental> findByClient(String clientId);
 
-    List<RentalProjection> findByEmployee(String employeeId);
+    List<Rental> findByEmployee(String employeeId);
 
-    Optional<RentalProjection> findById(String id);
+    Optional<Rental> findById(String id);
 }

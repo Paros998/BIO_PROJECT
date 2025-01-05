@@ -32,6 +32,8 @@ public class EmployeeHttpEndpoint {
         employeeService.setEmployeeActiveState(employeeId, setActive);
     }
 
+    // --------------------------------------
+
     @PostMapping("/finish-first-login")
     public void finishFirstLogin(final @Valid @RequestBody FinishFirstLoginRequest request) {
         employeeService.finishFirstLogin(request.getEmployeeId(), request.getPassword());

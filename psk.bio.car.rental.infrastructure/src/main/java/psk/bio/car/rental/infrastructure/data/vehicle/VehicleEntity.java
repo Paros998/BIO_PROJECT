@@ -7,7 +7,7 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
-import psk.bio.car.rental.application.rental.RentalProjection;
+import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.vehicle.*;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
@@ -146,7 +146,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     @Override
     public ReturnedVehicle returnVehicle() {
-        final RentalProjection currentRental = getCurrentRental();
+        final Rental currentRental = getCurrentRental();
         if (currentRental == null) {
             throw new RuntimeException("Vehicle is not rented.");
         }
@@ -159,7 +159,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     @Nullable
     @Override
-    public RentalProjection getCurrentRental() {
+    public Rental getCurrentRental() {
         return getVehicleRentals().stream()
                 .filter(rental -> rental.getState().equals(RentalState.ACTIVE))
                 .findFirst()

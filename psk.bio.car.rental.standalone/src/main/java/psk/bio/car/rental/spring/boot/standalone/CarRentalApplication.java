@@ -9,7 +9,8 @@ import psk.bio.car.rental.infrastructure.spring.CarRentalMainConfiguration;
 @SpringBootApplication
 @ComponentScan(basePackages = {
         "psk.bio.car.rental.spring.boot.standalone.starters.users",
-        "psk.bio.car.rental.spring.boot.standalone.starters.vehicles"
+        "psk.bio.car.rental.spring.boot.standalone.starters.vehicles",
+        "psk.bio.car.rental.spring.boot.standalone.starters.rentals"
 })
 @Import({
         CarRentalMainConfiguration.class

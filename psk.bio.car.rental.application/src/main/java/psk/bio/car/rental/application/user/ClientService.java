@@ -2,6 +2,7 @@ package psk.bio.car.rental.application.user;
 
 import lombok.NonNull;
 import psk.bio.car.rental.api.clients.ClientModel;
+import psk.bio.car.rental.api.clients.ClientRentedVehicles;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
@@ -16,4 +17,6 @@ public interface ClientService {
     PageResponse<ClientModel> fetchClients(@NonNull PageRequest pageRequest);
 
     void setClientActiveState(UUID clientId, boolean newState);
+
+    ClientRentedVehicles getRentedVehicles(@NonNull UUID clientId);
 }

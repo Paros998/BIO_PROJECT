@@ -8,10 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.clients.ClientModel;
+import psk.bio.car.rental.api.clients.ClientRentedVehicles;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
+import psk.bio.car.rental.api.vehicles.RentedVehicle;
 import psk.bio.car.rental.application.payments.PaymentStatus;
+import psk.bio.car.rental.application.rental.RentalRepository;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
@@ -23,7 +26,9 @@ import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageRequest;
 import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageResponse;
+import psk.bio.car.rental.infrastructure.data.mappers.VehicleMapper;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,6 +36,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final UserRepository userRepository;
+    private final RentalRepository rentalRepository;
     private final ClientJpaRepository clientRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserContextValidator userContextValidator;
@@ -88,6 +94,21 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
         client.setEnabled(newState);
         clientRepository.save(client);
+    }
+
+    @Override
+    public ClientRentedVehicles getRentedVehicles(final @NonNull UUID clientId) {
+        final ClientEntity client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+
+        List<RentedVehicle> rentedVehicles = rentalRepository.findByClient(clientId.toString()).stream()
+                .map(rental -> VehicleMapper.toRentedVehicle(rental.getVehicle(), rental))
+                .toList();
+
+        return ClientRentedVehicles.builder()
+                .client(toClientModel(client))
+                .vehicles(rentedVehicles)
+                .build();
     }
 
     private ClientModel toClientModel(final @NonNull ClientEntity client) {

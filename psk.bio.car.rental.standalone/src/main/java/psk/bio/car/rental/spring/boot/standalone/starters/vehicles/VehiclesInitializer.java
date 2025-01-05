@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleJpaRepository;
 
+@SuppressWarnings("checkstyle:MagicNumber")
 @Log4j2
 @RequiredArgsConstructor
+@Order(101)
 public class VehiclesInitializer implements ApplicationRunner {
     private final VehicleJpaRepository vehicleRepository;
     private final VehiclesToAddConfig config;

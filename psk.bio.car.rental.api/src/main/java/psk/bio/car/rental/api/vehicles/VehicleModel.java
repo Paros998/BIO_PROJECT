@@ -1,6 +1,7 @@
 package psk.bio.car.rental.api.vehicles;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -9,7 +10,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
+@SuperBuilder
 @EqualsAndHashCode
 public class VehicleModel implements Serializable {
     private UUID vehicleId;

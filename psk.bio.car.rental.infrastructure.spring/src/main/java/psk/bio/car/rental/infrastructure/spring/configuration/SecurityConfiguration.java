@@ -126,7 +126,8 @@ public class SecurityConfiguration {
 
                         .requestMatchers(
                                 HttpMethod.GET,
-                                "/api/vehicles/search**"
+                                "/api/vehicles/search**",
+                                "/api/clients/{userId}/rented-vehicles"
                         )
                         .hasRole(UserRole.CLIENT.name())
 
