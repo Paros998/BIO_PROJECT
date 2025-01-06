@@ -105,3 +105,34 @@ car-rental:
             ensured-on-date: '2024-01-01'
             ensured-due-date: '2025-01-01'
             external-insurance-id: 1006
+
+          - plate: 'PLT1007'
+            color: '1111'
+            model: 'Tesla 15'
+            state: rented
+            rentPerDayPrice: 350.00
+            year-of-production: '2015'
+            ensured-on-date: '2024-01-01'
+            ensured-due-date: '2026-01-01'
+            external-insurance-id: 1007
+            last-start-rent-date: '2025-01-01T00:00:00'
+
+  rentals:
+    starter:
+      enabled: true
+      data:
+        rentals:
+
+          - plate: 'PLT1007'
+            client-email: 'm.bohatko@gmail.com'
+            employee-email: 'employee_1@rental.com'
+            rental-entity:
+              state: active
+              start-date: '2025-01-01T00:00:00'
+              end-date: '2025-01-15T00:00:00'
+              associated-payments:
+                - status: pending
+                  amount: 1500.00
+                  due-date: '2025-01-15'
+                  creation-date: '2025-01-01T00:00:00'
+                  type: rental_fee

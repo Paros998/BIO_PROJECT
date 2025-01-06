@@ -18,7 +18,7 @@ import java.util.UUID;
 @Entity(name = "users")
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @ToString
 @SuperBuilder
@@ -51,10 +51,12 @@ public class UserEntity implements UserProjection {
 
     protected Boolean firstLoginDone;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     protected UserRole role;
 
     @ElementCollection(fetch = FetchType.EAGER, targetClass = Permission.class)
+    @Builder.Default
     protected List<Permission> permissions = new ArrayList<>();
 
     @Override

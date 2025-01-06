@@ -1,12 +1,13 @@
 package psk.bio.car.rental.infrastructure.data.vehicle;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
-import psk.bio.car.rental.application.rental.RentalProjection;
+import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.vehicle.*;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
@@ -72,11 +73,13 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     private LocalDateTime lastEndRentDate;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "associatedVehicle", fetch = FetchType.LAZY)
     @Builder.Default
     @ToString.Exclude
     private List<PaymentEntity> vehicleAssociatedPayments = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "vehicle", fetch = FetchType.LAZY)
     @Builder.Default
     @ToString.Exclude
@@ -143,7 +146,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     @Override
     public ReturnedVehicle returnVehicle() {
-        final RentalProjection currentRental = getCurrentRental();
+        final Rental currentRental = getCurrentRental();
         if (currentRental == null) {
             throw new RuntimeException("Vehicle is not rented.");
         }
@@ -156,7 +159,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     @Nullable
     @Override
-    public RentalProjection getCurrentRental() {
+    public Rental getCurrentRental() {
         return getVehicleRentals().stream()
                 .filter(rental -> rental.getState().equals(RentalState.ACTIVE))
                 .findFirst()

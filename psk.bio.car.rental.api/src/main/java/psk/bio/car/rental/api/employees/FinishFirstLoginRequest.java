@@ -1,9 +1,9 @@
-package psk.bio.car.rental.api.security;
+package psk.bio.car.rental.api.employees;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.io.Serializable;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -11,9 +11,9 @@ import java.io.Serializable;
 @ToString
 @SuperBuilder
 @EqualsAndHashCode
-public class RegisterRequest implements Serializable {
+public class FinishFirstLoginRequest {
     @NonNull
-    private String username;
+    private UUID employeeId;
 
     @NonNull
     private String password;

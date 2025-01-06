@@ -6,11 +6,13 @@ import lombok.*;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
+import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Getter
@@ -52,4 +54,29 @@ public class PaymentEntity {
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     private VehicleEntity associatedVehicle;
+
+    @JsonBackReference
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    private EmployeeEntity createdByEmployee;
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        PaymentEntity that = (PaymentEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(amount, that.amount) && Objects.equals(creationDate, that.creationDate)
+                && Objects.equals(dueDate, that.dueDate) && type == that.type && status == that.status
+                && Objects.equals(chargedClient, that.chargedClient) && Objects.equals(associatedVehicle, that.associatedVehicle)
+                && Objects.equals(createdByEmployee, that.createdByEmployee);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, amount, creationDate, dueDate, type, status, chargedClient, associatedVehicle, createdByEmployee);
+    }
 }

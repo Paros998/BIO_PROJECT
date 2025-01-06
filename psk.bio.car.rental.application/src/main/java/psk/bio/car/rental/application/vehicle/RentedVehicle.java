@@ -1,9 +1,9 @@
 package psk.bio.car.rental.application.vehicle;
 
-import psk.bio.car.rental.application.rental.RentalProjection;
+import psk.bio.car.rental.application.rental.Rental;
 
 public interface RentedVehicle extends Vehicle {
     ReturnedVehicle returnVehicle();
 
-    RentalProjection getCurrentRental();
+    Rental getCurrentRental();
 }

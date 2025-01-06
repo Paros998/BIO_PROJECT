@@ -58,10 +58,9 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilter
     }
 
     private SecureErrorResponse mapExceptionToJson(final @NonNull Exception exception) {
-        if (exception instanceof ExpiredJwtException e){
+        if (exception instanceof ExpiredJwtException) {
             return mapToSecureErrorResponse(TOKEN_EXPIRED_STATUS, null);
-        }
-        else if (exception instanceof ResponseStatusException rse) {
+        } else if (exception instanceof ResponseStatusException rse) {
             HttpStatus httpStatus = HttpStatus.resolve(rse.getStatusCode().value());
             if (httpStatus == null) {
                 httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;

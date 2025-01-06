@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -12,8 +13,10 @@ import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 
 import java.util.stream.Stream;
 
+@SuppressWarnings("checkstyle:MagicNumber")
 @Log4j2
 @RequiredArgsConstructor
+@Order(100)
 public class UsersInitializer implements ApplicationRunner {
     private final PasswordEncoder passwordEncoder;
     private final ClientJpaRepository clientRepository;

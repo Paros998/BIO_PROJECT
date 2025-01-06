@@ -16,6 +16,7 @@ import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 @ToString(callSuper = true)
 @SuperBuilder
 public class AdminEntity extends EmployeeEntity {
+
     public AdminEntity() {
         this.role = UserRole.ADMIN;
     }
