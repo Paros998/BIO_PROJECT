@@ -1,10 +1,14 @@
 package psk.bio.car.rental.infrastructure.data.services;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
+import psk.bio.car.rental.api.vehicles.AddVehicleRequest;
 import psk.bio.car.rental.api.vehicles.VehicleModel;
+import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
+import psk.bio.car.rental.application.vehicle.NewVehicle;
 import psk.bio.car.rental.application.vehicle.VehicleService;
 import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
@@ -13,6 +17,11 @@ import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageResponse;
 import psk.bio.car.rental.infrastructure.data.mappers.VehicleMapper;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleJpaRepository;
+
+import java.time.Year;
+import java.util.UUID;
+
+import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +43,23 @@ public class VehicleServiceImpl implements VehicleService {
         }
 
         return PageMapper.toPageResponse(vehicles, VehicleMapper::toVehicleModel);
+    }
+
+    @Override
+    public UUID registerNewVehicle(final @NonNull AddVehicleRequest request) {
+        if (vehicleRepository.findVehicleByPlate(request.getPlate()).isPresent()) {
+            throw BusinessExceptionFactory.instantiateBusinessException(VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS);
+        }
+
+        final var vehicle = VehicleEntity.builder()
+                .state(VehicleState.NEW)
+                .plate(request.getPlate())
+                .color(request.getColor())
+                .model(request.getModel())
+                .rentPerDayPrice(request.getRentPerDayPrice())
+                .yearOfProduction(Year.of(request.getYearOfProduction()))
+                .build();
+
+        return vehicleRepository.save((NewVehicle) vehicle).getVehicleId();
     }
 }

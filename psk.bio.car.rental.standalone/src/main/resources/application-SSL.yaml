@@ -1,0 +1,7 @@
+server:
+  ssl:
+    key-store-type: PKCS12
+    # default cert, add own or ask for password or disable SSL profile for http unsecured
+    key-store: classpath:keystore/domain.pfx
+    key-store-password: ${SSL_PASSWORD}
+    enabled: true

@@ -1,18 +1,18 @@
 package psk.bio.car.rental.infrastructure.spring.delivery.http;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
+import psk.bio.car.rental.api.vehicles.AddVehicleRequest;
 import psk.bio.car.rental.api.vehicles.VehicleModel;
 import psk.bio.car.rental.api.vehicles.VehicleState;
 import psk.bio.car.rental.application.vehicle.VehicleService;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/vehicles")
@@ -21,7 +21,7 @@ public class VehiclesHttpEndpoint {
     private final VehicleService vehicleService;
 
     @GetMapping("/search")
-    PageResponse<VehicleModel> searchVehicles(
+    public PageResponse<VehicleModel> searchVehicles(
             final @RequestParam(name = "state", required = false) VehicleState vehicleState,
             final @RequestParam(required = false, defaultValue = "1") Integer page,
             final @RequestParam(required = false, defaultValue = "10") Integer pageLimit,
@@ -36,5 +36,10 @@ public class VehiclesHttpEndpoint {
                         .orElse(null),
                 pageRequest
         );
+    }
+
+    @PostMapping
+    public UUID addVehicle(final @NonNull @RequestBody AddVehicleRequest request) {
+        return vehicleService.registerNewVehicle(request);
     }
 }

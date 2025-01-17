@@ -51,6 +51,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     @Column(nullable = false)
     private String color;
 
+    @Column(nullable = false)
     private BigDecimal rentPerDayPrice;
 
     private String externalInsuranceId;
@@ -62,6 +63,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
 
     private LocalDate ensuredDueDate;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private VehicleState state;
 
@@ -99,6 +101,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
                 .creationDate(LocalDateTime.now())
                 .dueDate(dueDate)
                 .chargedClient(client)
+                .associatedVehicle(this)
                 .build();
         this.vehicleAssociatedPayments.add(payment);
         this.state = VehicleState.READY_TO_RENT;
@@ -114,6 +117,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
                 .amount(totalCost)
                 .creationDate(LocalDateTime.now())
                 .dueDate(dueDate)
+                .associatedVehicle(this)
                 .build();
         this.vehicleAssociatedPayments.add(payment);
         this.state = VehicleState.READY_TO_RENT;
