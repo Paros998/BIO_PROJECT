@@ -32,7 +32,7 @@ public class AdminServiceImpl implements AdminService {
             throw BusinessExceptionFactory.instantiateBusinessException(USER_WITH_SAME_USERNAME_ALREADY_EXISTS);
         }
 
-        final EmployeeEntity employee = EmployeeEntity.builder()
+            final EmployeeEntity employee = EmployeeEntity.builder()
                 .role(UserRole.EMPLOYEE)
                 .email(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -44,6 +44,6 @@ public class AdminServiceImpl implements AdminService {
                 .enabled(Boolean.TRUE)
                 .firstLoginDone(Boolean.FALSE)
                 .build();
-        return employeeRepository.save(employee).getUserId();
+            return employeeRepository.save(employee).getUserId();
     }
 }
