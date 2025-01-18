@@ -6,6 +6,7 @@ import lombok.*;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
@@ -64,9 +65,10 @@ public class RentalEntity implements Rental {
     private List<PaymentEntity> associatedPayments = new ArrayList<>();
 
     @Override
-    public void finishRental() {
+    public void finishRental(final @NonNull UserProjection participatingEmployee) {
         this.endDate = LocalDateTime.now();
         this.state = RentalState.FINISHED;
+        this.setParticipatingEmployee((EmployeeEntity) participatingEmployee);
     }
 
     @Override

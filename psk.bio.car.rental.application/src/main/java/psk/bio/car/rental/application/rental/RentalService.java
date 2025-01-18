@@ -6,4 +6,8 @@ import java.util.UUID;
 
 public interface RentalService {
     UUID rentVehicle(@NonNull UUID vehicleId, @NonNull UUID clientId, @NonNull Integer numberOfDays);
+
+    Rental getRental(@NonNull UUID rentalId);
+
+    Rental saveRental(@NonNull Rental rental);
 }

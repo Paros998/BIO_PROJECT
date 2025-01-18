@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
+import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalService;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
@@ -69,11 +70,21 @@ public class RentalServiceImpl implements RentalService {
                 .build();
 
         paymentRepository.save(payment);
-        rentalEntity.setAssociatedPayments(List.of(payment));
 
         final RentedVehicle rentedVehicle = vehicle.rentVehicle(rentalEntity);
         vehicleRepository.save(rentedVehicle);
 
         return rentalRepository.save(rentalEntity).getId();
+    }
+
+    @Override
+    public Rental getRental(@NonNull final UUID rentalId) {
+        return rentalRepository.findById(rentalId.toString())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public Rental saveRental(@NonNull final Rental rental) {
+        return rentalRepository.save((RentalEntity) rental);
     }
 }

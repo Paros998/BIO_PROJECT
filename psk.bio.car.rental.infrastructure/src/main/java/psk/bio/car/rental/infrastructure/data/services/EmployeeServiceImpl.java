@@ -11,7 +11,13 @@ import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.employees.EmployeeModel;
 import psk.bio.car.rental.application.employee.EmployeeService;
+import psk.bio.car.rental.application.rental.Rental;
+import psk.bio.car.rental.application.rental.RentalService;
 import psk.bio.car.rental.application.security.UserContextValidator;
+import psk.bio.car.rental.application.vehicle.RentedVehicle;
+import psk.bio.car.rental.application.vehicle.ReturnedVehicle;
+import psk.bio.car.rental.application.vehicle.Vehicle;
+import psk.bio.car.rental.application.vehicle.VehicleRepository;
 import psk.bio.car.rental.infrastructure.data.admin.AdminEntity;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageRequest;
@@ -19,6 +25,7 @@ import psk.bio.car.rental.infrastructure.data.common.paging.SpringPageResponse;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -27,6 +34,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeJpaRepository employeeRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserContextValidator userContextValidator;
+    private final RentalService rentalService;
+    private final VehicleRepository vehicleRepository;
 
     @Override
     @Transactional
@@ -57,6 +66,29 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setEnabled(newState);
         employeeRepository.save(employee);
     }
+
+    @Override
+    @Transactional
+    public void returnVehicleAndSentItToRepairs(@NonNull final UUID rentalId,
+                                                @NonNull final UUID employeeId) {
+        userContextValidator.checkUserPerformingAction(employeeId);
+        final EmployeeEntity employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        final Rental rental = rentalService.getRental(rentalId);
+        rental.finishRental(employee);
+        rentalService.saveRental(rental);
+
+        final RentedVehicle vehicle = (RentedVehicle) rental.getVehicle();
+        final ReturnedVehicle returnedVehicle = vehicle.returnVehicle();
+        vehicleRepository.save(returnedVehicle);
+
+        final LocalDate currentDate = LocalDate.now();
+        if (rental.getRentEndDate().toLocalDate().isBefore(currentDate) ) {
+
+        }
+    }
+
 
     private EmployeeModel toEmployeeModel(final @NonNull EmployeeEntity employee) {
         return EmployeeModel.builder()

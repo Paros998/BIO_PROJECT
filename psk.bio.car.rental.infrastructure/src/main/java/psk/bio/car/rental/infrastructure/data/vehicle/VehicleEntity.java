@@ -1,19 +1,5 @@
 package psk.bio.car.rental.infrastructure.data.vehicle;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.annotation.Nullable;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.proxy.HibernateProxy;
-import psk.bio.car.rental.application.payments.PaymentStatus;
-import psk.bio.car.rental.application.payments.PaymentType;
-import psk.bio.car.rental.application.rental.Rental;
-import psk.bio.car.rental.application.rental.RentalState;
-import psk.bio.car.rental.application.vehicle.*;
-import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
-import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
-import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +8,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import org.hibernate.proxy.HibernateProxy;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
+import lombok.ToString;
+import psk.bio.car.rental.application.payments.PaymentStatus;
+import psk.bio.car.rental.application.payments.PaymentType;
+import psk.bio.car.rental.application.rental.Rental;
+import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.application.vehicle.InRepairVehicle;
+import psk.bio.car.rental.application.vehicle.NewVehicle;
+import psk.bio.car.rental.application.vehicle.ReadyToRentVehicle;
+import psk.bio.car.rental.application.vehicle.RentedVehicle;
+import psk.bio.car.rental.application.vehicle.ReturnedVehicle;
+import psk.bio.car.rental.application.vehicle.VehicleState;
+import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
+import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
+import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 
 @Getter
 @Setter
@@ -153,7 +175,6 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
         }
 
         this.lastEndRentDate = LocalDateTime.now();
-        currentRental.finishRental();
         this.state = VehicleState.JUST_RETURNED;
         return this;
     }
