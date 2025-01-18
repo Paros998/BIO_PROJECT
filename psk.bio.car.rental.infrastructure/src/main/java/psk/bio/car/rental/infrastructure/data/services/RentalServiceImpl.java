@@ -44,6 +44,9 @@ public class RentalServiceImpl implements RentalService {
     @Override
     @Transactional
     public UUID rentVehicle(final @NonNull UUID vehicleId, final @NonNull UUID clientId, final @NonNull Integer numberOfDays) {
+        if (numberOfDays <= 0) {
+            throw new IllegalArgumentException("Number of days must be greater than 0");
+        }
         userContextValidator.checkUserPerformingAction(clientId);
         final ReadyToRentVehicle vehicle = vehicleService.findReadyToRentVehicle(vehicleId);
 
