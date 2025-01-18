@@ -125,6 +125,12 @@ public class SecurityConfiguration {
                         .hasRole(UserRole.CLIENT.name())
 
                         .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/rentals"
+                        )
+                        .hasRole(UserRole.CLIENT.name())
+
+                        .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/vehicles/search**",
                                 "/api/clients/{userId}/rented-vehicles"

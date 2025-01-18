@@ -134,16 +134,13 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     }
 
     @Override
-    public RentedVehicle rentVehicle(final String rentalId) {
+    public RentedVehicle rentVehicle(final Rental rental) {
         if (getCurrentRental() != null) {
             throw new RuntimeException("Vehicle is already rented.");
         }
 
-        var rental = RentalEntity.builder()
-                .id(UUID.fromString(rentalId))
-                .build();
         this.lastStartRentDate = LocalDateTime.now();
-        this.vehicleRentals.add(rental);
+        this.vehicleRentals.add((RentalEntity) rental);
         this.state = VehicleState.RENTED;
         return this;
     }

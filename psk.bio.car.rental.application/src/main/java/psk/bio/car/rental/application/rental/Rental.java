@@ -1,5 +1,6 @@
 package psk.bio.car.rental.application.rental;
 
+import org.springframework.lang.Nullable;
 import psk.bio.car.rental.application.vehicle.Vehicle;
 
 import java.time.LocalDateTime;
@@ -14,7 +15,7 @@ public interface Rental {
 
     UUID getVehicleId();
 
-    UUID getApprovingEmployeeId();
+    @Nullable UUID getApprovingEmployeeId();
 
     LocalDateTime getRentStartDate();
 

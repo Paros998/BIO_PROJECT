@@ -12,4 +12,7 @@ public interface VehicleService {
     PageResponse<VehicleModel> searchVehicles(VehicleState vehicleState, PageRequest pageRequest);
 
     UUID registerNewVehicle(@NonNull AddVehicleRequest request);
+
+    @NonNull
+    ReadyToRentVehicle findReadyToRentVehicle(@NonNull UUID vehicleId);
 }

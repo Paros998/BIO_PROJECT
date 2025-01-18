@@ -21,6 +21,8 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleEntity, UUID>
 
     Page<VehicleEntity> findByState(VehicleState state, Pageable pageable);
 
+    Optional<VehicleEntity> findByIdAndState(@NonNull UUID id, VehicleState state);
+
     // -------------------------------------------
 
     @Override

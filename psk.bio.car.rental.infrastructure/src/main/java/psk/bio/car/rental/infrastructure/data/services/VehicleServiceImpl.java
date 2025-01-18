@@ -2,13 +2,16 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.vehicles.AddVehicleRequest;
 import psk.bio.car.rental.api.vehicles.VehicleModel;
 import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
 import psk.bio.car.rental.application.vehicle.NewVehicle;
+import psk.bio.car.rental.application.vehicle.ReadyToRentVehicle;
 import psk.bio.car.rental.application.vehicle.VehicleService;
 import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
@@ -61,5 +64,11 @@ public class VehicleServiceImpl implements VehicleService {
                 .build();
 
         return vehicleRepository.save((NewVehicle) vehicle).getVehicleId();
+    }
+
+    @Override
+    public @NonNull ReadyToRentVehicle findReadyToRentVehicle(final @NonNull UUID vehicleId) {
+        return vehicleRepository.findByIdAndState(vehicleId, VehicleState.READY_TO_RENT)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 }
