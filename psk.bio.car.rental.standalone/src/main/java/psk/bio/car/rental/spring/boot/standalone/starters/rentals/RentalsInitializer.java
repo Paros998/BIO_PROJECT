@@ -6,13 +6,12 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.Transactional;
+import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentJpaRepository;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalJpaRepository;
-import psk.bio.car.rental.infrastructure.data.user.UserEntity;
-import psk.bio.car.rental.infrastructure.data.user.UserJpaRepository;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleJpaRepository;
 
@@ -23,7 +22,7 @@ import psk.bio.car.rental.infrastructure.data.vehicle.VehicleJpaRepository;
 public class RentalsInitializer implements ApplicationRunner {
     private final RentalJpaRepository rentalJpaRepository;
     private final VehicleJpaRepository vehicleJpaRepository;
-    private final UserJpaRepository userJpaRepository;
+    private final UserRepository userRepository;
     private final PaymentJpaRepository paymentJpaRepository;
     private final RentalsToAddConfig rentalsToAddConfig;
 
@@ -37,8 +36,8 @@ public class RentalsInitializer implements ApplicationRunner {
 
     private void addRental(final RentalsToAddConfig.RentalToAdd rental) {
         log.info("Initializing Rental: {}", rental);
-        final UserEntity client = userJpaRepository.findByEmail(rental.getClientEmail()).orElseThrow();
-        final UserEntity employee = userJpaRepository.findByEmail(rental.getEmployeeEmail()).orElseThrow();
+        final ClientEntity client = (ClientEntity) userRepository.findByUsername(rental.getClientEmail()).orElseThrow();
+        final EmployeeEntity employee = (EmployeeEntity) userRepository.findByUsername(rental.getEmployeeEmail()).orElseThrow();
         final VehicleEntity vehicle = vehicleJpaRepository.findByPlate(rental.getPlate()).orElseThrow();
 
         final RentalEntity rentalEntity = rental.getRentalEntity();
