@@ -5,15 +5,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
-import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.employees.EmployeeModel;
 import psk.bio.car.rental.application.security.UserContextValidator;
-import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 

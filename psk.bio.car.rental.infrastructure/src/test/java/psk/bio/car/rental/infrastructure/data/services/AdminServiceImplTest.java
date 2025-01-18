@@ -137,8 +137,8 @@ class AdminServiceImplTest {
 
         // Act & Assert
         assertThrows(Exception.class, () -> adminService.addEmployee(request));
-//        verify(userRepository, never()).findByUsername(any());
-//        verify(employeeRepository, never()).save(any());
+        verify(userRepository, times(1)).findByUsername(any());
+        verify(employeeRepository, times(1)).save(any());
     }
 
     @Test
