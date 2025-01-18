@@ -22,7 +22,7 @@ public interface RentalJpaRepository extends JpaRepository<RentalEntity, UUID>, 
         return findByParticipatingEmployeeUserId(UUID.fromString(employeeId)).stream()
                 .map(Rental.class::cast)
                 .toList();
-    };
+    }
 
     @Override
     default Optional<Rental> findById(final String id) {

@@ -12,10 +12,7 @@ import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -89,7 +86,7 @@ public class RentalEntity implements Rental {
 
     @Override
     public UUID getApprovingEmployeeId() {
-        return getParticipatingEmployee().getUserId();
+        return Optional.ofNullable(getParticipatingEmployee()).map(EmployeeEntity::getUserId).orElse(null);
     }
 
     @Override
