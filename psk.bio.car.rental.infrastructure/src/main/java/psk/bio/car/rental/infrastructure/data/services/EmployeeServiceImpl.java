@@ -2,6 +2,7 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,9 @@ import psk.bio.car.rental.infrastructure.data.employee.EmployeeJpaRepository;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -34,9 +37,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final PasswordEncoder passwordEncoder;
     private final UserContextValidator userContextValidator;
 
-    private final @Lazy PaymentServiceImpl paymentService;
-    private final @Lazy RentalServiceImpl rentalService;
-    private final @Lazy VehicleServiceImpl vehicleService;
+    @Autowired
+    private @Lazy PaymentServiceImpl paymentService;
+    @Autowired
+    private @Lazy RentalServiceImpl rentalService;
+    @Autowired
+    private @Lazy VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
@@ -66,6 +72,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(employee);
     }
 
+    @Transactional
+    public void finishRepairsAndChargeCompany(final @NonNull UUID employeeId, final @NonNull UUID vehicleId,
+                                              final @NonNull BigDecimal totalCost, final @NonNull String bankAccountNumber,
+                                              final @NonNull LocalDate dueDate) {
+        userContextValidator.checkUserPerformingAction(employeeId);
+        final EmployeeEntity employee = getEmployee(employeeId);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.IN_REPAIR);
+        vehicleService.finishRepairsAndChargeCompany(vehicle, employee, totalCost, bankAccountNumber, dueDate);
+    }
+
+    @Transactional
+    public void finishRepairsAndChargeLastCustomerThatRentedCar(final @NonNull UUID employeeId, final @NonNull UUID vehicleId,
+                                                                final @NonNull BigDecimal totalCost,
+                                                                final @NonNull String bankAccountNumber, final @NonNull LocalDate dueDate) {
+        userContextValidator.checkUserPerformingAction(employeeId);
+        final EmployeeEntity employee = getEmployee(employeeId);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.IN_REPAIR);
+        vehicleService.finishRepairsAndChargeCustomer(vehicle, employee, totalCost, bankAccountNumber, dueDate);
+    }
+
     @Override
     @Transactional
     public void returnVehicleAndMakeReadyToRent(@NonNull final UUID rentalId,
@@ -86,22 +112,24 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     @Transactional
-    public void insureVehicleAndMakeReadyToRent(final @NonNull UUID employeeId,
-                                                final @NonNull UUID vehicleId,
-                                                final @NonNull String insuranceId,
-                                                final @NonNull LocalDate dueDate) {
+    public void insureVehicleAndMakeInsured(final @NonNull UUID employeeId,
+                                            final @NonNull UUID vehicleId,
+                                            final @NonNull String insuranceId,
+                                            final @NonNull String bankAccountNumber,
+                                            final @NonNull BigDecimal insuranceCost,
+                                            final @NonNull LocalDate dueDate) {
         userContextValidator.checkUserPerformingAction(employeeId);
-        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.NEW);
-        vehicle.insureVehicle(insuranceId, dueDate);
-        vehicleService.makeVehicleReadyToRent(vehicle);
+        final EmployeeEntity employee = getEmployee(employeeId);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, Set.of(VehicleState.NEW, VehicleState.NOT_INSURED));
+        vehicleService.makeVehicleInsured(vehicle, employee, insuranceId, bankAccountNumber, insuranceCost, dueDate);
     }
 
     @Override
     @Transactional
-    public void sendNewVehicleToRepairs(final @NonNull UUID employeeId,
-                                        final @NonNull UUID vehicleId) {
+    public void sendInsuredOrJustReturnedVehicleToRepairs(final @NonNull UUID employeeId,
+                                                          final @NonNull UUID vehicleId) {
         userContextValidator.checkUserPerformingAction(employeeId);
-        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.NEW);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, Set.of(VehicleState.INSURED, VehicleState.JUST_RETURNED));
         vehicleService.sendToRepair(vehicle);
     }
 

@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import psk.bio.car.rental.application.payments.CompanyFinancialConfiguration;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
@@ -23,6 +24,7 @@ public class PaymentServiceImpl {
     private static final Integer PAYMENT_DAYS = 7;
 
     private final PaymentJpaRepository paymentRepository;
+    private final CompanyFinancialConfiguration financialConfiguration;
 
     @Transactional
     public void createOverRentPaymentIfNecessary(final @NonNull RentalEntity rental, final @NonNull EmployeeEntity employee) {
@@ -41,6 +43,7 @@ public class PaymentServiceImpl {
                 .dueDate(LocalDate.now().plusDays(PAYMENT_DAYS))
                 .associatedVehicle(rental.getVehicle())
                 .associatedRental(rental)
+                .accountNumber(financialConfiguration.getCompanyBankAccountNumber())
                 .amount(rental.getVehicle().getRentPerDayPrice()
                         .multiply(PaymentType.OVER_DUE_MODIFIER)
                         .multiply(BigDecimal.valueOf(daysOfOverDueRent)))

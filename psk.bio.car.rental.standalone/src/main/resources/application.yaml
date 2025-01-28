@@ -36,3 +36,8 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
+
+business:
+  configuration:
+    company:
+      account-number: ${COMPANY_ACCOUNT_NUMBER}

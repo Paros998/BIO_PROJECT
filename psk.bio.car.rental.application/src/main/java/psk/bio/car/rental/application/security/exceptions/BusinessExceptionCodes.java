@@ -10,4 +10,5 @@ public class BusinessExceptionCodes {
     public static final String VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS = "VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS";
     public static final String VEHICLE_IS_NOT_RENTED = "VEHICLE_IS_NOT_RENTED";
     public static final String VEHICLE_IS_ALREADY_RENTED = "VEHICLE_IS_ALREADY_RENTED";
+    public static final String VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT = "VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT";
 }

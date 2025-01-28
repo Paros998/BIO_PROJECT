@@ -1,5 +1,18 @@
 package psk.bio.car.rental.infrastructure.data.vehicle;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.annotation.Nullable;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
+import psk.bio.car.rental.application.rental.Rental;
+import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
+import psk.bio.car.rental.application.vehicle.*;
+import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
+import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
+
 import java.math.BigDecimal;
 import java.nio.file.attribute.UserPrincipal;
 import java.time.LocalDate;
@@ -10,32 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.*;
-import org.hibernate.proxy.HibernateProxy;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.annotation.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
-import lombok.ToString;
-import psk.bio.car.rental.application.payments.PaymentStatus;
-import psk.bio.car.rental.application.payments.PaymentType;
-import psk.bio.car.rental.application.rental.Rental;
-import psk.bio.car.rental.application.rental.RentalState;
-import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
-import psk.bio.car.rental.application.vehicle.*;
-import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
-import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
-import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
-
-import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_ALREADY_RENTED;
-import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_NOT_RENTED;
+import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.*;
 
 @Getter
 @Setter
@@ -107,56 +95,17 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
     private List<RentalEntity> vehicleRentals = new ArrayList<>();
 
     @Override
-    public VehicleEntity finishRepairsAndMakeReadyToRent(final @NonNull BigDecimal totalCost,
-                                                         final @NonNull LocalDate dueDate,
-                                                         final @NonNull UserPrincipal client) {
+    public VehicleEntity finishRepairsAndMakeReadyToRent() {
         this.lastEndRepairDate = LocalDateTime.now();
-        var payment = PaymentEntity.builder()
-                .status(PaymentStatus.PENDING)
-                .type(PaymentType.CLIENT_REPAIR)
-                .amount(totalCost)
-                .creationDate(LocalDateTime.now())
-                .dueDate(dueDate)
-                .chargedClient((ClientEntity) client)
-                .associatedVehicle(this)
-                .associatedRental(null)
-                .build();
-        this.state = VehicleState.READY_TO_RENT;
-        return this;
-    }
-
-    @Override
-    public VehicleEntity finishRepairsAndRequireInsurance(final @NonNull BigDecimal totalCost,
-                                                          final @NonNull LocalDate dueDate) {
-        return null;
-    }
-
-    @Override
-    public VehicleEntity finishRepairsAndRequireInsurance(final @NonNull BigDecimal totalCost,
-                                                          final @NonNull LocalDate dueDate,
-                                                          final @NonNull UserPrincipal client) {
-        return null;
-    }
-
-    @Override
-    public VehicleEntity finishRepairsAndMakeReadyToRent(final @NonNull BigDecimal totalCost,
-                                                         final @NonNull LocalDate dueDate) {
-        this.lastEndRepairDate = LocalDateTime.now();
-        var payment = PaymentEntity.builder()
-                .status(PaymentStatus.PENDING)
-                .type(PaymentType.REPAIR)
-                .amount(totalCost)
-                .creationDate(LocalDateTime.now())
-                .dueDate(dueDate)
-                .associatedVehicle(this)
-                .associatedRental(null)
-                .build();
         this.state = VehicleState.READY_TO_RENT;
         return this;
     }
 
     @Override
     public VehicleEntity insureVehicle(final @NonNull String insuranceId, final @NonNull LocalDate dueDate) {
+        if (dueDate.isBefore(LocalDate.now()) || dueDate.isEqual(LocalDate.now())) {
+            throw BusinessExceptionFactory.instantiateBusinessException(VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT);
+        }
         this.externalInsuranceId = insuranceId;
         this.ensuredOnDate = LocalDate.now();
         this.ensuredDueDate = dueDate;

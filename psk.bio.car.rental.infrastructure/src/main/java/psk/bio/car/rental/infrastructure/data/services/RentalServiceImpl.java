@@ -2,11 +2,13 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import psk.bio.car.rental.application.payments.CompanyFinancialConfiguration;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
 import psk.bio.car.rental.application.rental.Rental;
@@ -35,9 +37,14 @@ public class RentalServiceImpl implements RentalService {
     private final RentalJpaRepository rentalRepository;
     private final UserContextValidator userContextValidator;
 
-    private final @Lazy ClientServiceImpl clientService;
-    private final @Lazy PaymentServiceImpl paymentService;
-    private final @Lazy VehicleServiceImpl vehicleService;
+    private final CompanyFinancialConfiguration financialConfiguration;
+
+    @Autowired
+    private @Lazy ClientServiceImpl clientService;
+    @Autowired
+    private @Lazy PaymentServiceImpl paymentService;
+    @Autowired
+    private @Lazy VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
@@ -62,6 +69,7 @@ public class RentalServiceImpl implements RentalService {
                 .creationDate(LocalDateTime.now())
                 .chargedClient(client)
                 .dueDate(LocalDate.now().plusDays(DEFAULT_PAYMENT_DAYS_DUE))
+                .accountNumber(financialConfiguration.getCompanyBankAccountNumber())
                 .amount((vehicle).getRentPerDayPrice().multiply(new BigDecimal(numberOfDays)))
                 .build();
 

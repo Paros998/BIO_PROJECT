@@ -2,28 +2,30 @@ package psk.bio.car.rental.application.vehicle;
 
 
 /**
- * NEW -> NOT_INSURED // via employee
- * NEW -> IN_REPAIR // via employee
+ * NEW -> INSURED // via employee ✔️
  * ........................
- * NOT_INSURED -> IN_REPAIR // via employee
- * NOT_INSURED -> READY_TO_RENT // via employee
+ * NOT_INSURED -> INSURED // via employee ✔️
  * ........................
- * IN_REPAIR -> READY_TO_RENT // via employee and the check for insurance validity
+ * INSURED -> IN_REPAIR // via employee ✔️
+ * INSURED -> READY_TO_RENT // via employee
  * ........................
- * READY_TO_RENT -> RENTED // via client
- * READY_TO_RENT -> NOT_INSURED // AUTOMATIC via scheduled checker
+ * IN_REPAIR -> READY_TO_RENT // via employee and then check for insurance validity ✔️
+ * charge company ✔️ ; charge client ✔️
  * ........................
- * RENTED -> JUST_RETURNED // via employee
+ * READY_TO_RENT -> RENTED // via client ✔️
+ * READY_TO_RENT -> NOT_INSURED // AUTOMATIC via scheduled checker ✔️
  * ........................
- * JUST_RETURNED -> READY_TO_RENT // via employee
- * JUST_RETURNED -> IN_REPAIR // via employee
- * JUST_RETURNED -> NOT_INSURED // via employee
+ * RENTED -> JUST_RETURNED // via employee ✔️
+ * ........................
+ * JUST_RETURNED -> READY_TO_RENT // via employee and then check for insurance validity ✔️
+ * JUST_RETURNED -> IN_REPAIR // via employee ✔️
  */
 public enum VehicleState {
     RENTED,
     JUST_RETURNED,
     READY_TO_RENT,
     IN_REPAIR,
+    INSURED,
     NOT_INSURED,
     NEW
 }

@@ -17,7 +17,8 @@ public class BusinessExceptionFactory {
             USER_PERFORMING_ACTION_NOT_EXISTS, "User performing action not exists",
             VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS, "Vehicle with same plate already exists",
             VEHICLE_IS_NOT_RENTED, "Vehicle is not rented",
-            VEHICLE_IS_ALREADY_RENTED, "Vehicle is already rented"
+            VEHICLE_IS_ALREADY_RENTED, "Vehicle is already rented",
+            VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT, "Vehicle insurance due date is incorrect"
     );
 
     public static BusinessException instantiateBusinessException(final @NonNull String code) {
