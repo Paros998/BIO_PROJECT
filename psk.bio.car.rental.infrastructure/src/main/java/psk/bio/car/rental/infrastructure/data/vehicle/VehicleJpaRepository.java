@@ -21,20 +21,15 @@ public interface VehicleJpaRepository extends JpaRepository<VehicleEntity, UUID>
 
     Page<VehicleEntity> findByState(VehicleState state, Pageable pageable);
 
-    Optional<VehicleEntity> findByIdAndState(@NonNull UUID id, VehicleState state);
+    Optional<VehicleEntity> findByIdAndState(@NonNull UUID id, @NonNull VehicleState state);
+
+    List<VehicleEntity> findByState(@NonNull VehicleState state);
 
     // -------------------------------------------
 
     @Override
     default Optional<Vehicle> findVehicleByPlate(final @NonNull String plate) {
         return findByPlate(plate).map(Vehicle.class::cast);
-    }
-
-    @Override
-    default List<Vehicle> findAllVehicles() {
-        return findAll().stream()
-                .map(Vehicle.class::cast)
-                .toList();
     }
 
 }

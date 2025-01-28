@@ -7,6 +7,7 @@ import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
+import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.math.BigDecimal;
@@ -58,6 +59,11 @@ public class PaymentEntity {
     @JsonBackReference
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
+    private RentalEntity associatedRental;
+
+    @JsonBackReference
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     private EmployeeEntity createdByEmployee;
 
     @Override
@@ -72,11 +78,12 @@ public class PaymentEntity {
         return Objects.equals(id, that.id) && Objects.equals(amount, that.amount) && Objects.equals(creationDate, that.creationDate)
                 && Objects.equals(dueDate, that.dueDate) && type == that.type && status == that.status
                 && Objects.equals(chargedClient, that.chargedClient) && Objects.equals(associatedVehicle, that.associatedVehicle)
-                && Objects.equals(createdByEmployee, that.createdByEmployee);
+                && Objects.equals(associatedRental, that.associatedRental) && Objects.equals(createdByEmployee, that.createdByEmployee);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, amount, creationDate, dueDate, type, status, chargedClient, associatedVehicle, createdByEmployee);
+        return Objects.hash(id, amount, creationDate, dueDate, type, status, chargedClient, associatedVehicle, associatedRental,
+                createdByEmployee);
     }
 }

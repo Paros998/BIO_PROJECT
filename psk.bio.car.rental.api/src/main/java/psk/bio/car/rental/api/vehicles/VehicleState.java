@@ -5,5 +5,6 @@ public enum VehicleState {
     JUST_RETURNED,
     READY_TO_RENT,
     IN_REPAIR,
+    NOT_INSURED,
     NEW
 }
