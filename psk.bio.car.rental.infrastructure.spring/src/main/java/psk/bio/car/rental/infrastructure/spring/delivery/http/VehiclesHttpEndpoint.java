@@ -8,8 +8,8 @@ import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.vehicles.AddVehicleRequest;
 import psk.bio.car.rental.api.vehicles.VehicleModel;
 import psk.bio.car.rental.api.vehicles.VehicleState;
-import psk.bio.car.rental.application.vehicle.VehicleService;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
+import psk.bio.car.rental.infrastructure.data.services.VehicleServiceImpl;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,7 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/vehicles")
 @RestController
 public class VehiclesHttpEndpoint {
-    private final VehicleService vehicleService;
+    private final VehicleServiceImpl vehicleService;
 
     @GetMapping("/search")
     public PageResponse<VehicleModel> searchVehicles(

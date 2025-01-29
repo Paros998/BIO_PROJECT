@@ -138,9 +138,16 @@ public class SecurityConfiguration {
                         .hasRole(UserRole.CLIENT.name())
 
                         .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/rentals/**"
+                        )
+                        .hasRole(UserRole.CLIENT.name())
+
+                        .requestMatchers(
                                 "/api/vehicles/**",
                                 "/api/clients/**",
-                                "/api/employees/finish-first-login"
+                                "/api/employees/finish-first-login",
+                                "/api/employees/manage-vehicles/**"
                         ).hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(

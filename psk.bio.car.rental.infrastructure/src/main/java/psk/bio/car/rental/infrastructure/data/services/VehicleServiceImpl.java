@@ -2,6 +2,7 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +43,7 @@ import java.util.concurrent.TimeUnit;
 import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_NOT_RENTED;
 import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_WITH_SAME_PLATE_ALREADY_EXISTS;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
@@ -130,10 +133,10 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Transactional
     public void finishRepairsAndChargeCustomer(final @NonNull VehicleEntity vehicle,
-                                              final @NonNull EmployeeEntity createdBy,
-                                              final @NonNull BigDecimal totalCost,
-                                              final @NonNull String bankAccountNumber,
-                                              final @NonNull LocalDate dueDate) {
+                                               final @NonNull EmployeeEntity createdBy,
+                                               final @NonNull BigDecimal totalCost,
+                                               final @NonNull String bankAccountNumber,
+                                               final @NonNull LocalDate dueDate) {
         final RentalEntity rentalAfterRepairsWhereNeeded = vehicle.getLastRental();
         final ClientEntity chargedClient = rentalAfterRepairsWhereNeeded.getClient();
         vehicle.finishRepairsAndMakeReadyToRent();
@@ -211,6 +214,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Scheduled(timeUnit = TimeUnit.HOURS, fixedRate = 8L)
     @Transactional
     public void checkForInsuranceEnding() {
+        log.info("Checking for insurance ending of vehicles.");
         validateVehiclesInsurance(vehicleRepository.findByState(VehicleState.READY_TO_RENT));
     }
 
@@ -219,14 +223,18 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private void validateVehiclesInsurance(final @NonNull Collection<VehicleEntity> vehicles) {
-        vehicles.stream()
+        final List<VehicleEntity> vehiclesToRevokeInsurance = vehicles.stream()
                 .filter(vehicle -> vehicle.getState() == VehicleState.READY_TO_RENT)
                 .filter(vehicleEntity -> vehicleEntity.getEnsuredDueDate().isBefore(LocalDate.now())
                         || vehicleEntity.getEnsuredDueDate().isEqual(LocalDate.now()))
-                .forEach(vehicleEntity -> {
-                    vehicleEntity.insuranceRevoked();
-                    vehicleRepository.save(vehicleEntity);
-                });
+                .toList();
+
+        log.info("Revoking vehicles insurances :{}", vehiclesToRevokeInsurance);
+        vehiclesToRevokeInsurance.forEach(vehicleEntity -> {
+            vehicleEntity.insuranceRevoked();
+            vehicleRepository.save(vehicleEntity);
+        });
+        log.info("Revoking vehicles insurances finished, total vehicles revoked:{}", vehiclesToRevokeInsurance.size());
     }
 
 }

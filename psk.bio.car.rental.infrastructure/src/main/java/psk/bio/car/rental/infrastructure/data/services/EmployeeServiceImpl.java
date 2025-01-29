@@ -83,9 +83,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Transactional
-    public void finishRepairsAndChargeLastCustomerThatRentedCar(final @NonNull UUID employeeId, final @NonNull UUID vehicleId,
-                                                                final @NonNull BigDecimal totalCost,
-                                                                final @NonNull String bankAccountNumber, final @NonNull LocalDate dueDate) {
+    public void finishRepairsAndChargeLastCustomerThatRentedCar(
+            final @NonNull UUID employeeId, final @NonNull UUID vehicleId,
+            final @NonNull BigDecimal totalCost, final @NonNull String bankAccountNumber,
+            final @NonNull LocalDate dueDate) {
         userContextValidator.checkUserPerformingAction(employeeId);
         final EmployeeEntity employee = getEmployee(employeeId);
         final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.IN_REPAIR);
