@@ -19,11 +19,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import psk.bio.car.rental.application.security.ContextProvider;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.UserRepository;
 import psk.bio.car.rental.infrastructure.spring.filters.formlogin.FormLoginAuthenticationFilter;
 import psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenFilter;
+import psk.bio.car.rental.infrastructure.spring.security.SpringSecurityContextProvider;
 import psk.bio.car.rental.infrastructure.spring.security.SpringUserContextValidator;
 
 import java.util.Arrays;
@@ -73,8 +75,13 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserContextValidator userContextValidator(final @NonNull UserRepository userRepository) {
-        return new SpringUserContextValidator(userRepository);
+    public UserContextValidator userContextValidator(final @NonNull ContextProvider contextProvider) {
+        return new SpringUserContextValidator(contextProvider);
+    }
+
+    @Bean
+    public ContextProvider contextProvider(final @NonNull UserRepository userRepository) {
+        return new SpringSecurityContextProvider(userRepository);
     }
 
     @Bean
@@ -138,9 +145,16 @@ public class SecurityConfiguration {
                         .hasRole(UserRole.CLIENT.name())
 
                         .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/rentals/**"
+                        )
+                        .hasRole(UserRole.CLIENT.name())
+
+                        .requestMatchers(
                                 "/api/vehicles/**",
                                 "/api/clients/**",
-                                "/api/employees/finish-first-login"
+                                "/api/employees/finish-first-login",
+                                "/api/employees/manage-vehicles/**"
                         ).hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(

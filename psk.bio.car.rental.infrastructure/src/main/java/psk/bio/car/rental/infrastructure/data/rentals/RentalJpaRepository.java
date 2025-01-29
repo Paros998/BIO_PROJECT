@@ -5,7 +5,6 @@ import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -22,12 +21,6 @@ public interface RentalJpaRepository extends JpaRepository<RentalEntity, UUID>, 
         return findByParticipatingEmployeeUserId(UUID.fromString(employeeId)).stream()
                 .map(Rental.class::cast)
                 .toList();
-    }
-
-    @Override
-    default Optional<Rental> findById(final String id) {
-        return findById(UUID.fromString(id))
-                .map(Rental.class::cast);
     }
 
     List<RentalEntity> findByClientUserId(UUID clientId);

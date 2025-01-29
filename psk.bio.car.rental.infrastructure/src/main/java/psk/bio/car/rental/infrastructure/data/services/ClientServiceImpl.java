@@ -2,6 +2,8 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,8 @@ import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
 import psk.bio.car.rental.api.vehicles.RentedVehicle;
 import psk.bio.car.rental.application.payments.PaymentStatus;
-import psk.bio.car.rental.application.rental.RentalRepository;
 import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.application.security.ContextProvider;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.ClientService;
@@ -36,10 +38,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ClientServiceImpl implements ClientService {
     private final UserRepository userRepository;
-    private final RentalRepository rentalRepository;
     private final ClientJpaRepository clientRepository;
-    private final PasswordEncoder passwordEncoder;
+
     private final UserContextValidator userContextValidator;
+    private final ContextProvider contextProvider;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private @Lazy RentalServiceImpl rentalService;
 
     @Override
     @Transactional
@@ -90,19 +96,24 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public void setClientActiveState(final @NonNull UUID clientId, final boolean newState) {
-        final ClientEntity client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        final ClientEntity client = findById(clientId);
         client.setEnabled(newState);
         clientRepository.save(client);
     }
 
+    public ClientEntity findById(final @NonNull UUID clientId) {
+        return clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+    }
+
     @Override
     public ClientRentedVehicles getRentedVehicles(final @NonNull UUID clientId) {
-        final ClientEntity client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Client not found"));
+        final ClientEntity client = findById(clientId);
 
-        List<RentedVehicle> rentedVehicles = rentalRepository.findByClient(clientId.toString()).stream()
-                .map(rental -> VehicleMapper.toRentedVehicle(rental.getVehicle(), rental))
+        UserProjection currentUser = contextProvider.getCurrentUser();
+
+        List<RentedVehicle> rentedVehicles = rentalService.findByClientId(clientId).stream()
+                .map(rental -> VehicleMapper.toRentedVehicle(rental.getVehicle(), rental, currentUser.getRole()))
                 .toList();
 
         return ClientRentedVehicles.builder()

@@ -2,23 +2,23 @@ package psk.bio.car.rental.infrastructure.data.services;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import psk.bio.car.rental.application.payments.CompanyFinancialConfiguration;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
+import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalService;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
-import psk.bio.car.rental.application.user.UserRepository;
-import psk.bio.car.rental.application.vehicle.ReadyToRentVehicle;
-import psk.bio.car.rental.application.vehicle.RentedVehicle;
-import psk.bio.car.rental.application.vehicle.VehicleRepository;
-import psk.bio.car.rental.application.vehicle.VehicleService;
+import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
+import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
-import psk.bio.car.rental.infrastructure.data.payments.PaymentJpaRepository;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalJpaRepository;
 import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
@@ -35,11 +35,16 @@ public class RentalServiceImpl implements RentalService {
     private static final Integer DEFAULT_PAYMENT_DAYS_DUE = 7;
 
     private final RentalJpaRepository rentalRepository;
-    private final VehicleRepository vehicleRepository;
-    private final PaymentJpaRepository paymentRepository;
-    private final UserRepository userRepository;
-    private final VehicleService vehicleService;
     private final UserContextValidator userContextValidator;
+
+    private final CompanyFinancialConfiguration financialConfiguration;
+
+    @Autowired
+    private @Lazy ClientServiceImpl clientService;
+    @Autowired
+    private @Lazy PaymentServiceImpl paymentService;
+    @Autowired
+    private @Lazy VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
@@ -48,35 +53,61 @@ public class RentalServiceImpl implements RentalService {
             throw new IllegalArgumentException("Number of days must be greater than 0");
         }
         userContextValidator.checkUserPerformingAction(clientId);
-        final ReadyToRentVehicle vehicle = vehicleService.findReadyToRentVehicle(vehicleId);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.READY_TO_RENT);
 
-        final ClientEntity client = (ClientEntity) userRepository.findById(String.valueOf(clientId))
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
+        final ClientEntity client = clientService.findById(clientId);
         final RentalEntity rentalEntity = RentalEntity.builder()
                 .state(RentalState.NEW)
-                .vehicle((VehicleEntity) vehicle)
+                .vehicle(vehicle)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(numberOfDays))
                 .client(client)
                 .build();
 
         final PaymentEntity payment = PaymentEntity.builder()
-                .associatedVehicle((VehicleEntity) vehicle)
+                .associatedVehicle(vehicle)
+                .associatedRental(rentalEntity)
                 .type(PaymentType.RENTAL_FEE)
                 .status(PaymentStatus.PENDING)
                 .creationDate(LocalDateTime.now())
                 .chargedClient(client)
                 .dueDate(LocalDate.now().plusDays(DEFAULT_PAYMENT_DAYS_DUE))
-                .amount(((VehicleEntity) vehicle).getRentPerDayPrice().multiply(new BigDecimal(numberOfDays)))
+                .accountNumber(financialConfiguration.getCompanyBankAccountNumber())
+                .amount((vehicle).getRentPerDayPrice().multiply(new BigDecimal(numberOfDays)))
                 .build();
 
-        paymentRepository.save(payment);
-        rentalEntity.setAssociatedPayments(List.of(payment));
+        paymentService.save(payment);
 
-        final RentedVehicle rentedVehicle = vehicle.rentVehicle(rentalEntity);
-        vehicleRepository.save(rentedVehicle);
+        final VehicleEntity rentedVehicle = vehicle.rentVehicle(rentalEntity);
+        vehicleService.save(rentedVehicle);
 
         return rentalRepository.save(rentalEntity).getId();
+    }
+
+    @Transactional
+    public RentalEntity finishRental(final @NonNull UUID rentalId, final @NonNull EmployeeEntity employee) {
+        final RentalEntity rental = rentalRepository.findById(rentalId)
+                .filter(rentalEntity -> rentalEntity.getState().equals(RentalState.ACTIVE))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        rental.finishRental(employee);
+        rentalRepository.save(rental);
+        return rental;
+    }
+
+    @Override
+    public RentalEntity getRental(@NonNull final UUID rentalId) {
+        return rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Override
+    public RentalEntity saveRental(@NonNull final Rental rental) {
+        return rentalRepository.save((RentalEntity) rental);
+    }
+
+    public List<RentalEntity> findByClientId(final @NonNull UUID clientId) {
+        return rentalRepository.findByClient(clientId.toString()).stream()
+                .map(RentalEntity.class::cast)
+                .toList();
     }
 }

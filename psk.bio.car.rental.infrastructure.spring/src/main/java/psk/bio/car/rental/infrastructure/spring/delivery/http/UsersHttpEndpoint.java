@@ -9,9 +9,9 @@ import psk.bio.car.rental.api.security.FinishRegisterRequest;
 import psk.bio.car.rental.api.security.RegisterRequest;
 import psk.bio.car.rental.api.users.UserModel;
 import psk.bio.car.rental.api.users.UserRole;
-import psk.bio.car.rental.application.user.ClientService;
 import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.user.UserRepository;
+import psk.bio.car.rental.infrastructure.data.services.ClientServiceImpl;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 public class UsersHttpEndpoint {
     private final UserRepository userRepository;
-    private final ClientService clientService;
+    private final ClientServiceImpl clientService;
 
     @GetMapping("/{userId}")
     public UserModel findUser(final @PathVariable("userId") UUID userId) {
