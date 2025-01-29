@@ -7,8 +7,8 @@ import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
 import psk.bio.car.rental.api.employees.EmployeeModel;
 import psk.bio.car.rental.api.employees.FinishFirstLoginRequest;
-import psk.bio.car.rental.application.employee.EmployeeService;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
+import psk.bio.car.rental.infrastructure.data.services.EmployeeServiceImpl;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ import java.util.UUID;
 @RequestMapping("/api/employees")
 @RestController
 public class EmployeeHttpEndpoint {
-    private final EmployeeService employeeService;
+    private final EmployeeServiceImpl employeeService;
 
     @GetMapping
     public PageResponse<EmployeeModel> fetchEmployees(final @RequestParam(required = false, defaultValue = "1") Integer page,

@@ -59,14 +59,16 @@ public class RentalEntity implements Rental {
 
     @JsonBackReference
     @ToString.Exclude
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "associatedRental")
     @Builder.Default
     private List<PaymentEntity> associatedPayments = new ArrayList<>();
 
-    @Override
-    public void finishRental() {
+
+    @SuppressWarnings("checkstyle:HiddenField")
+    public void finishRental(final @NonNull EmployeeEntity participatingEmployee) {
         this.endDate = LocalDateTime.now();
         this.state = RentalState.FINISHED;
+        this.setParticipatingEmployee(participatingEmployee);
     }
 
     @Override

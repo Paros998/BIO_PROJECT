@@ -6,8 +6,8 @@ import psk.bio.car.rental.api.clients.ClientModel;
 import psk.bio.car.rental.api.clients.ClientRentedVehicles;
 import psk.bio.car.rental.api.common.paging.PageRequest;
 import psk.bio.car.rental.api.common.paging.PageResponse;
-import psk.bio.car.rental.application.user.ClientService;
 import psk.bio.car.rental.infrastructure.data.common.paging.PageMapper;
+import psk.bio.car.rental.infrastructure.data.services.ClientServiceImpl;
 
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("/api/clients")
 @RestController
 public class ClientsHttpEndpoint {
-    private final ClientService clientService;
+    private final ClientServiceImpl clientService;
 
     @GetMapping
     public PageResponse<ClientModel> fetchClients(final @RequestParam(required = false, defaultValue = "1") Integer page,

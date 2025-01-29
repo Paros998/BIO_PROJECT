@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface Rental {
+
     UUID getRentalId();
 
     UUID getClientId();
@@ -25,5 +26,4 @@ public interface Rental {
 
     RentalState getState();
 
-    void finishRental();
 }
