@@ -42,9 +42,10 @@ public class VehicleMapper {
                         Optional.ofNullable(vehicle.getRentPrice())
                                 .map(BigDecimal::toEngineeringString)
                                 .orElse(null))
-                .employeeActions(userRole == UserRole.CLIENT ? Set.of() : stateToActionsMap.get(vehicle.getState()).stream()
-                        .map(action -> psk.bio.car.rental.api.vehicles.VehicleAction.valueOf(action.name()))
-                        .collect(Collectors.toSet()))
+                .employeeActions(userRole == UserRole.CLIENT ? Set.of() : stateToActionsMap.getOrDefault(vehicle.getState(), Set.of())
+                        .stream().map(action -> psk.bio.car.rental.api.vehicles.VehicleAction.valueOf(action.name()))
+                        .collect(Collectors.toSet())
+                )
                 .build();
     }
 
