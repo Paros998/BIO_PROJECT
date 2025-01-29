@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import psk.bio.car.rental.api.employees.vehicles.management.FinishRepairsRequest;
 import psk.bio.car.rental.api.employees.vehicles.management.InsureVehicleRequest;
+import psk.bio.car.rental.api.employees.vehicles.management.MakeVehicleReadyToRentRequest;
 import psk.bio.car.rental.api.employees.vehicles.management.SendVehicleToRepairsRequest;
 import psk.bio.car.rental.infrastructure.data.services.EmployeeServiceImpl;
 
@@ -37,5 +38,10 @@ public class EmployeeVehicleManagementHttpEndpoint {
     @PutMapping("/send-to-repairs")
     public void sendVehicleToRepairs(final @Valid @RequestBody SendVehicleToRepairsRequest request) {
         employeeService.sendInsuredOrJustReturnedVehicleToRepairs(request.getEmployeeId(), request.getVehicleId());
+    }
+
+    @PutMapping("/make-ready-to-rent")
+    public void makeReadyToRent(final @Valid @RequestBody MakeVehicleReadyToRentRequest request) {
+        employeeService.makeInsuredVehicleReadyToRent(request.getEmployeeId(), request.getVehicleId());
     }
 }

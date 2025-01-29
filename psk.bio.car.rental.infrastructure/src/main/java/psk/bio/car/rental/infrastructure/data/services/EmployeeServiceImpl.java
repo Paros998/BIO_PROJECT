@@ -134,6 +134,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         vehicleService.sendToRepair(vehicle);
     }
 
+    @Transactional
+    public void makeInsuredVehicleReadyToRent(final @NonNull UUID employeeId,
+                                              final @NonNull UUID vehicleId) {
+        userContextValidator.checkUserPerformingAction(employeeId);
+        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.INSURED);
+        vehicleService.makeVehicleReadyToRent(vehicle);
+    }
+
     @NonNull
     private EmployeeEntity getEmployee(final @NonNull UUID employeeId) {
         return employeeRepository.findById(employeeId)

@@ -11,4 +11,5 @@ public class BusinessExceptionCodes {
     public static final String VEHICLE_IS_NOT_RENTED = "VEHICLE_IS_NOT_RENTED";
     public static final String VEHICLE_IS_ALREADY_RENTED = "VEHICLE_IS_ALREADY_RENTED";
     public static final String VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT = "VEHICLE_INSURANCE_DUE_DATE_IS_INCORRECT";
+    public static final String USER_NOT_LOGGED_IN = "USER_NOT_LOGGED_IN";
 }

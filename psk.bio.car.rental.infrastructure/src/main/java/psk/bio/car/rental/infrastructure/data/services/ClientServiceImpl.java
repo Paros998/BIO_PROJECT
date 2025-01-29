@@ -17,6 +17,7 @@ import psk.bio.car.rental.api.security.FinishRegisterRequest;
 import psk.bio.car.rental.api.vehicles.RentedVehicle;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.application.security.ContextProvider;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.ClientService;
@@ -40,6 +41,7 @@ public class ClientServiceImpl implements ClientService {
     private final ClientJpaRepository clientRepository;
 
     private final UserContextValidator userContextValidator;
+    private final ContextProvider contextProvider;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -108,8 +110,10 @@ public class ClientServiceImpl implements ClientService {
     public ClientRentedVehicles getRentedVehicles(final @NonNull UUID clientId) {
         final ClientEntity client = findById(clientId);
 
+        UserProjection currentUser = contextProvider.getCurrentUser();
+
         List<RentedVehicle> rentedVehicles = rentalService.findByClientId(clientId).stream()
-                .map(rental -> VehicleMapper.toRentedVehicle(rental.getVehicle(), rental))
+                .map(rental -> VehicleMapper.toRentedVehicle(rental.getVehicle(), rental, currentUser.getRole()))
                 .toList();
 
         return ClientRentedVehicles.builder()

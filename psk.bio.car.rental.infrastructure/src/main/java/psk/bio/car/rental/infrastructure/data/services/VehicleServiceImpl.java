@@ -16,7 +16,9 @@ import psk.bio.car.rental.api.vehicles.AddVehicleRequest;
 import psk.bio.car.rental.api.vehicles.VehicleModel;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
+import psk.bio.car.rental.application.security.ContextProvider;
 import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
+import psk.bio.car.rental.application.user.UserProjection;
 import psk.bio.car.rental.application.vehicle.VehicleService;
 import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
@@ -48,6 +50,7 @@ import static psk.bio.car.rental.application.security.exceptions.BusinessExcepti
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
     private final VehicleJpaRepository vehicleRepository;
+    private final ContextProvider contextProvider;
 
     @Autowired
     private @Lazy PaymentServiceImpl paymentService;
@@ -66,7 +69,9 @@ public class VehicleServiceImpl implements VehicleService {
             );
         }
 
-        return PageMapper.toPageResponse(vehicles, VehicleMapper::toVehicleModel);
+        final UserProjection currentUser = contextProvider.getCurrentUser();
+
+        return PageMapper.toPageResponse(vehicles, vehicle ->  VehicleMapper.toVehicleModel(vehicle, currentUser.getRole()));
     }
 
     @Override

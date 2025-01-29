@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -20,4 +21,5 @@ public class VehicleModel implements Serializable {
     private Integer yearOfProduction;
     private VehicleState state;
     private String rentPerDayPrice;
+    private Set<VehicleAction> employeeActions;
 }
