@@ -15,7 +15,6 @@ import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalService;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
-import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
@@ -30,7 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class RentalServiceImpl implements RentalService {
     private static final Integer DEFAULT_PAYMENT_DAYS_DUE = 7;
 
@@ -39,12 +38,9 @@ public class RentalServiceImpl implements RentalService {
 
     private final CompanyFinancialConfiguration financialConfiguration;
 
-    @Autowired
-    private @Lazy ClientServiceImpl clientService;
-    @Autowired
-    private @Lazy PaymentServiceImpl paymentService;
-    @Autowired
-    private @Lazy VehicleServiceImpl vehicleService;
+    private final ClientServiceImpl clientService;
+    private final PaymentServiceImpl paymentService;
+    private final VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
@@ -53,7 +49,7 @@ public class RentalServiceImpl implements RentalService {
             throw new IllegalArgumentException("Number of days must be greater than 0");
         }
         userContextValidator.checkUserPerformingAction(clientId);
-        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.READY_TO_RENT);
+        final VehicleEntity vehicle = vehicleService.findReadyToRentVehicle(vehicleId);
 
         final ClientEntity client = clientService.findById(clientId);
         final RentalEntity rentalEntity = RentalEntity.builder()

@@ -35,7 +35,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class ClientServiceImpl implements ClientService {
     private final UserRepository userRepository;
     private final ClientJpaRepository clientRepository;
@@ -44,8 +44,7 @@ public class ClientServiceImpl implements ClientService {
     private final ContextProvider contextProvider;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private @Lazy RentalServiceImpl rentalService;
+    private final RentalServiceImpl rentalService;
 
     @Override
     @Transactional

@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceImplTest {
@@ -77,23 +77,23 @@ class EmployeeServiceImplTest {
     }
 
 
-@Test
-void shouldSetEmployeeActiveStateToFalseAndSaveChanges() {
-    // Given
-    UUID employeeId = UUID.randomUUID();
-    EmployeeEntity employee = new EmployeeEntity();
-    employee.setEnabled(true);
+    @Test
+    void shouldSetEmployeeActiveStateToFalseAndSaveChanges() {
+        // Given
+        UUID employeeId = UUID.randomUUID();
+        EmployeeEntity employee = new EmployeeEntity();
+        employee.setEnabled(true);
 
-    when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
+        when(employeeRepository.findById(employeeId)).thenReturn(Optional.of(employee));
 
-    // When
-    employeeService.setEmployeeActiveState(employeeId, false);
+        // When
+        employeeService.setEmployeeActiveState(employeeId, false);
 
-    // Then
-    assertFalse(employee.isActive());
-    verify(employeeRepository).findById(employeeId);
-    verify(employeeRepository).save(employee);
-}
+        // Then
+        assertFalse(employee.isActive());
+        verify(employeeRepository).findById(employeeId);
+        verify(employeeRepository).save(employee);
+    }
 
     @Test
     void shouldMapEmployeeEntityToEmployeeModel() throws Exception {

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 import psk.bio.car.rental.api.security.FinishRegisterRequest;
-import psk.bio.car.rental.application.rental.RentalRepository;
+import psk.bio.car.rental.application.security.ContextProvider;
 import psk.bio.car.rental.application.security.UserContextValidator;
 import psk.bio.car.rental.application.security.UserRole;
 import psk.bio.car.rental.application.user.UserRepository;
@@ -17,9 +17,12 @@ import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.client.ClientJpaRepository;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
@@ -39,15 +42,14 @@ class ClientServiceImplTest {
     @Mock
     private UserContextValidator userContextValidator;
 
+    @Mock
+    private ContextProvider contextProvider;
+
+    @Mock
+    private RentalServiceImpl rentalService;
+
     @InjectMocks
     private ClientServiceImpl clientService;
-
-    @Mock
-    private RentalRepository rentalRepository;
-
-    @Mock
-    private ClientServiceImpl clientModelMapper;
-
 
     @Test
     void shouldSuccessfullyRegisterNewClientWithValidEmailAndPassword() {
@@ -107,13 +109,7 @@ class ClientServiceImplTest {
 
         // Then
         assertEquals(expectedUserId, result);
-        verify(clientRepository).save(argThat(client ->
-                client.getRole() == UserRole.CLIENT &&
-                        client.getEmail().equals(email) &&
-                        client.getPassword().equals("encodedPassword") &&
-                        client.isEnabled() &&
-                        !client.getFirstLoginDone()
-        ));
+        verify(clientRepository).save(argThat(client -> client.equals(expectedClientEntity)));
     }
 
 
@@ -145,13 +141,7 @@ class ClientServiceImplTest {
 
         // Then
         assertEquals(expectedUserId, result);
-        verify(clientRepository).save(argThat(client ->
-                client.isEnabled() &&
-                        client.getEmail().equals(email) &&
-                        client.getPassword().equals("encodedPassword") &&
-                        client.getRole() == UserRole.CLIENT &&
-                        !client.getFirstLoginDone()
-        ));
+        verify(clientRepository).save(argThat(client -> client.equals(expectedClientEntity)));
     }
 
 
@@ -185,13 +175,8 @@ class ClientServiceImplTest {
 
         // Then
         assertEquals(expectedUserId, result);
-        verify(clientRepository).save(argThat(client ->
-                UserRole.CLIENT.equals(client.getRole()) &&
-                        email.equals(client.getEmail()) &&
-                        encodedPassword.equals(client.getPassword()) &&
-                        client.isEnabled() &&
-                        !client.getFirstLoginDone()
-        ));
+        verify(clientRepository).save(argThat(client -> client.equals(expectedClientEntity)));
+
     }
 
 
@@ -223,13 +208,8 @@ class ClientServiceImplTest {
 
         // Then
         assertEquals(expectedUserId, result);
-        verify(clientRepository).save(argThat(client ->
-                client.getEmail().equals(email) &&
-                        client.getPassword().equals("encodedPassword") &&
-                        client.isEnabled() &&
-                        !client.getFirstLoginDone() &&
-                        client.getRole() == UserRole.CLIENT
-        ));
+        verify(clientRepository).save(argThat(client -> client.equals(expectedClientEntity)));
+
     }
 
     @Test
@@ -316,8 +296,9 @@ class ClientServiceImplTest {
         assertEquals(HttpStatus.NOT_FOUND, exception.getStatusCode());
         assertEquals("Client not found", exception.getReason());
         verify(clientRepository).findById(clientId);
-        verifyNoInteractions(rentalRepository);
+        verifyNoInteractions(rentalService);
     }
+
     @Test
     void shouldHandleRentalWithNullVehicle() {
         // Given
@@ -329,7 +310,8 @@ class ClientServiceImplTest {
         rentalWithNullVehicle.setVehicle(null);
 
         when(clientRepository.findById(clientId)).thenReturn(Optional.of(client));
-        when(rentalRepository.findByClient(clientId.toString())).thenReturn(List.of(rentalWithNullVehicle));
+        when(rentalService.findByClientId(clientId)).thenReturn(List.of(rentalWithNullVehicle));
+        when(contextProvider.getCurrentUser()).thenReturn(client);
 
         // When
         Exception exception = assertThrows(NullPointerException.class,
@@ -338,7 +320,7 @@ class ClientServiceImplTest {
         // Then
         assertEquals("vehicle is marked non-null but is null", exception.getMessage());
         verify(clientRepository).findById(clientId);
-        verify(rentalRepository).findByClient(clientId.toString());
+        verify(rentalService).findByClientId(clientId);
     }
 
 
