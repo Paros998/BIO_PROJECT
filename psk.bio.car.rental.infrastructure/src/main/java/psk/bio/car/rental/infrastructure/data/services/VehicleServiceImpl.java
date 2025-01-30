@@ -36,10 +36,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_NOT_RENTED;
@@ -143,7 +140,9 @@ public class VehicleServiceImpl implements VehicleService {
                                                final @NonNull String bankAccountNumber,
                                                final @NonNull LocalDate dueDate) {
         final RentalEntity rentalAfterRepairsWhereNeeded = vehicle.getLastRental();
-        final ClientEntity chargedClient = rentalAfterRepairsWhereNeeded.getClient();
+        final ClientEntity chargedClient = Optional.ofNullable(rentalAfterRepairsWhereNeeded)
+                .map(RentalEntity::getClient)
+                .orElse(null);
         vehicle.finishRepairsAndMakeReadyToRent();
         vehicleRepository.save(vehicle);
         var payment = PaymentEntity.builder()
