@@ -1,12 +1,12 @@
 package psk.bio.car.rental.infrastructure.spring.error.handling;
 
-import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefresher.TOKEN_EXPIRED_STATUS;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,18 +17,18 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import psk.bio.car.rental.api.errors.ErrorResponse;
 import psk.bio.car.rental.application.profiles.ApplicationProfile;
 import psk.bio.car.rental.application.security.exceptions.BusinessException;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+
+import static psk.bio.car.rental.infrastructure.spring.filters.jwt.JwtTokenRefresher.TOKEN_EXPIRED_STATUS;
+
+@Log4j2
 @RequiredArgsConstructor
 @Component("customHttpAdvice")
 @Profile(ApplicationProfile.UNSECURE_ERRORS)
@@ -39,12 +39,14 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
             throws IOException {
+        log.error(authException);
         var errorResponse = mapToErrorResponse(HttpStatus.UNAUTHORIZED, authException, request.getRequestURI());
         writeResponse(res, errorResponse);
     }
 
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final Exception exception) throws IOException {
+        log.error(exception);
         var errorResponse = mapExceptionToJson(exception, request.getRequestURI());
         writeResponse(res, errorResponse);
     }
@@ -58,10 +60,9 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
     }
 
     private ErrorResponse mapExceptionToJson(final @NonNull Exception exception, final String path) {
-        if (exception instanceof ExpiredJwtException e){
+        if (exception instanceof ExpiredJwtException e) {
             return mapToErrorResponse(TOKEN_EXPIRED_STATUS, e, path);
-        }
-        else if (exception instanceof ResponseStatusException rse) {
+        } else if (exception instanceof ResponseStatusException rse) {
             HttpStatus httpStatus = HttpStatus.resolve(rse.getStatusCode().value());
             if (httpStatus == null) {
                 httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -74,18 +75,21 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleException(final AuthenticationException authException, final HttpServletRequest request) {
+        log.error(authException);
         var response = mapToErrorResponse(HttpStatus.UNAUTHORIZED, authException, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleException(final BusinessException ex, final HttpServletRequest request) {
+        log.error(ex);
         var response = mapToErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleException(final ResponseStatusException ex, final HttpServletRequest request) {
+        log.error(ex);
         HttpStatus httpStatus = HttpStatus.resolve(ex.getStatusCode().value());
         if (httpStatus == null) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -96,6 +100,7 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(final Exception ex, final HttpServletRequest request) {
+        log.error(ex);
         var response = mapToErrorResponse(ex, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

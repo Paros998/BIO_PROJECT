@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.time.LocalDateTime;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,6 +30,7 @@ import psk.bio.car.rental.api.errors.SecureErrorResponse;
 import psk.bio.car.rental.application.profiles.ApplicationProfile;
 import psk.bio.car.rental.application.security.exceptions.BusinessException;
 
+@Log4j2
 @RequiredArgsConstructor
 @Component("customHttpAdvice")
 @Profile(ApplicationProfile.SECURE_ERRORS)
@@ -39,12 +41,14 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilter
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
             throws IOException {
+        log.error(authException);
         var errorResponse = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, authException.getMessage());
         writeResponse(res, errorResponse);
     }
 
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final Exception exception) throws IOException {
+        log.error(exception);
         var errorResponse = mapExceptionToJson(exception);
         writeResponse(res, errorResponse);
     }
@@ -73,18 +77,21 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilter
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<SecureErrorResponse> handleException(final AuthenticationException authException) {
+        log.error(authException);
         var response = mapToSecureErrorResponse(HttpStatus.UNAUTHORIZED, authException.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<SecureErrorResponse> handleException(final BusinessException ex, final HttpServletRequest request) {
+        log.error(ex);
         var response = mapToSecureErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getMessage());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<SecureErrorResponse> handleException(final ResponseStatusException ex, final HttpServletRequest request) {
+        log.error(ex);
         HttpStatus httpStatus = HttpStatus.resolve(ex.getStatusCode().value());
         if (httpStatus == null) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -95,6 +102,7 @@ public class DefaultHttpAdvice implements AuthenticationEntryPoint, CustomFilter
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<SecureErrorResponse> handleException(final Exception ex, final HttpServletRequest request) {
+        log.error(ex);
         var response = mapToSecureErrorResponse();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }

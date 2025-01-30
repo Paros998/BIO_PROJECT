@@ -78,7 +78,7 @@ car-rental:
           - plate: 'PLT1003'
             color: '#218317'
             model: 'Tesla 13'
-            state: just_returned
+            state: in_repair
             rentPerDayPrice: 350.00
             year-of-production: '2013'
             ensured-on-date: '2024-01-01'
