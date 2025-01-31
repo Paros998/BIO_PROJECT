@@ -150,9 +150,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private VehicleEntity finishRental(final @NonNull UUID rentalId, final @NonNull UUID employeeId) {
         final EmployeeEntity employee = getEmployee(employeeId);
+        final RentalEntity activeRental = rentalService.getRental(rentalId);
 
+        final VehicleEntity vehicle = vehicleService.returnVehicle(activeRental);
         final RentalEntity rental = rentalService.finishRental(rentalId, employee);
-        final VehicleEntity vehicle = vehicleService.returnVehicle(rental);
 
         paymentService.createOverRentPaymentIfNecessary(rental, employee);
         return vehicle;

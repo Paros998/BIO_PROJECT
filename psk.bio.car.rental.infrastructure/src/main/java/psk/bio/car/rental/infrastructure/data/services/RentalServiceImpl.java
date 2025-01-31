@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import psk.bio.car.rental.api.rentals.RentalModel;
 import psk.bio.car.rental.application.payments.CompanyFinancialConfiguration;
 import psk.bio.car.rental.application.payments.PaymentStatus;
 import psk.bio.car.rental.application.payments.PaymentType;
@@ -15,9 +16,11 @@ import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalService;
 import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.UserContextValidator;
+import psk.bio.car.rental.application.security.exceptions.BusinessExceptionFactory;
 import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.client.ClientEntity;
 import psk.bio.car.rental.infrastructure.data.employee.EmployeeEntity;
+import psk.bio.car.rental.infrastructure.data.mappers.VehicleMapper;
 import psk.bio.car.rental.infrastructure.data.payments.PaymentEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalJpaRepository;
@@ -28,6 +31,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_NOT_RENTED;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +59,7 @@ public class RentalServiceImpl implements RentalService {
 
         final ClientEntity client = clientService.findById(clientId);
         final RentalEntity rentalEntity = RentalEntity.builder()
-                .state(RentalState.NEW)
+                .state(RentalState.ACTIVE)
                 .vehicle(vehicle)
                 .startDate(LocalDateTime.now())
                 .endDate(LocalDateTime.now().plusDays(numberOfDays))
@@ -89,6 +94,13 @@ public class RentalServiceImpl implements RentalService {
         rental.finishRental(employee);
         rentalRepository.save(rental);
         return rental;
+    }
+
+    public RentalModel getRentalModelForVehicle(final @NonNull UUID vehicleId) {
+        final var vehicle = vehicleService.getVehicle(vehicleId, VehicleState.RENTED);
+        return rentalRepository.findByVehicleAndState(vehicle, RentalState.ACTIVE)
+                .map(VehicleMapper::toRentalModel)
+                .orElseThrow(() -> BusinessExceptionFactory.instantiateBusinessException(VEHICLE_IS_NOT_RENTED));
     }
 
     @Override

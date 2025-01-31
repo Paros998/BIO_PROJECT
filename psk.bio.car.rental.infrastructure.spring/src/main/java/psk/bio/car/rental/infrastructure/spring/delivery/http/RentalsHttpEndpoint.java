@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import psk.bio.car.rental.api.rentals.CreateVehicleRentalRequest;
 import psk.bio.car.rental.api.rentals.FinishVehicleRentalRequest;
+import psk.bio.car.rental.api.rentals.RentalModel;
 import psk.bio.car.rental.infrastructure.data.services.EmployeeServiceImpl;
 import psk.bio.car.rental.infrastructure.data.services.RentalServiceImpl;
 
@@ -16,6 +17,11 @@ import java.util.UUID;
 public class RentalsHttpEndpoint {
     private final RentalServiceImpl rentalService;
     private final EmployeeServiceImpl employeeService;
+
+    @GetMapping("/for-vehicle/{vehicleId}")
+    public RentalModel getRentalForVehicle(final @PathVariable UUID vehicleId) {
+        return rentalService.getRentalModelForVehicle(vehicleId);
+    }
 
     @PostMapping
     public UUID createdVehicleRental(final @RequestBody @Valid CreateVehicleRentalRequest request) {
