@@ -116,6 +116,13 @@ car-rental:
             external-insurance-id: 1007
             last-start-rent-date: '2025-01-01T00:00:00'
 
+          - plate: 'PLT1008'
+            color: '#2100F3'
+            model: 'Wolkswagen Golf 4'
+            state: not_insured
+            rentPerDayPrice: 320.00
+            year-of-production: '2016'
+
   rentals:
     starter:
       enabled: true

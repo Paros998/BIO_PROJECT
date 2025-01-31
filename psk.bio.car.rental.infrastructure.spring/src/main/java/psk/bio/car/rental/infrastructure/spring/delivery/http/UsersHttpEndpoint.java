@@ -33,7 +33,7 @@ public class UsersHttpEndpoint {
                         .firstLogin(user.isFirstLogin())
                         .role(UserRole.valueOf(user.getRole().name()))
                         .build())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     @GetMapping

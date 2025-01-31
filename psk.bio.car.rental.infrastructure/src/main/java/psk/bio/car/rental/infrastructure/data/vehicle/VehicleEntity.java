@@ -109,7 +109,7 @@ public class VehicleEntity implements NewVehicle, InRepairVehicle, ReadyToRentVe
         this.externalInsuranceId = insuranceId;
         this.ensuredOnDate = LocalDate.now();
         this.ensuredDueDate = dueDate;
-        this.state = VehicleState.READY_TO_RENT;
+        this.state = VehicleState.INSURED;
         return this;
     }
 
