@@ -148,7 +148,13 @@ public class SecurityConfiguration {
                                 HttpMethod.PUT,
                                 "/api/rentals/**"
                         )
-                        .hasRole(UserRole.CLIENT.name())
+                        .hasRole(UserRole.EMPLOYEE.name())
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/rentals/**"
+                        )
+                        .hasRole(UserRole.EMPLOYEE.name())
 
                         .requestMatchers(
                                 "/api/vehicles/**",

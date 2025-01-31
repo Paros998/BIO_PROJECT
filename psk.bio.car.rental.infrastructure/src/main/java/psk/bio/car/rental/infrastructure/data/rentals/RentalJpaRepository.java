@@ -3,8 +3,11 @@ package psk.bio.car.rental.infrastructure.data.rentals;
 import org.springframework.data.jpa.repository.JpaRepository;
 import psk.bio.car.rental.application.rental.Rental;
 import psk.bio.car.rental.application.rental.RentalRepository;
+import psk.bio.car.rental.application.rental.RentalState;
+import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -22,6 +25,8 @@ public interface RentalJpaRepository extends JpaRepository<RentalEntity, UUID>, 
                 .map(Rental.class::cast)
                 .toList();
     }
+
+    Optional<RentalEntity> findByVehicleAndState(VehicleEntity vehicle, RentalState state);
 
     List<RentalEntity> findByClientUserId(UUID clientId);
 

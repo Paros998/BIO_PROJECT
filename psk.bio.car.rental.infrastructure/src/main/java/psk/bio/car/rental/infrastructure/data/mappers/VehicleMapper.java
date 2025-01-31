@@ -52,15 +52,19 @@ public class VehicleMapper {
     public RentedVehicle toRentedVehicle(final @NonNull Vehicle vehicle, final @NonNull Rental rental, @NonNull final UserRole userRole) {
         return RentedVehicle.builder()
                 .vehicle(toVehicleModel(vehicle, userRole))
-                .rental(RentalModel.builder()
-                        .rentalId(rental.getRentalId())
-                        .vehicleId(rental.getVehicleId())
-                        .clientId(rental.getClientId())
-                        .approvingEmployeeId(rental.getApprovingEmployeeId())
-                        .startDate(rental.getRentStartDate())
-                        .endDate(rental.getRentEndDate())
-                        .paymentsFeesPaid(rental.areAllPaymentsFeesPaid())
-                        .build())
+                .rental(toRentalModel(rental))
+                .build();
+    }
+
+    public RentalModel toRentalModel(final @NonNull Rental rental) {
+        return RentalModel.builder()
+                .rentalId(rental.getRentalId())
+                .vehicleId(rental.getVehicleId())
+                .clientId(rental.getClientId())
+                .approvingEmployeeId(rental.getApprovingEmployeeId())
+                .startDate(rental.getRentStartDate())
+                .endDate(rental.getRentEndDate())
+                .paymentsFeesPaid(rental.areAllPaymentsFeesPaid())
                 .build();
     }
 }

@@ -39,14 +39,14 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final AuthenticationException authException)
             throws IOException {
-        log.error(authException);
+        log.error("AuthenticationException: ", authException);
         var errorResponse = mapToErrorResponse(HttpStatus.UNAUTHORIZED, authException, request.getRequestURI());
         writeResponse(res, errorResponse);
     }
 
     @Override
     public void commence(final HttpServletRequest request, final HttpServletResponse res, final Exception exception) throws IOException {
-        log.error(exception);
+        log.error("Exception:", exception);
         var errorResponse = mapExceptionToJson(exception, request.getRequestURI());
         writeResponse(res, errorResponse);
     }
@@ -75,21 +75,21 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleException(final AuthenticationException authException, final HttpServletRequest request) {
-        log.error(authException);
+        log.error("AuthenticationException:", authException);
         var response = mapToErrorResponse(HttpStatus.UNAUTHORIZED, authException, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ErrorResponse> handleException(final BusinessException ex, final HttpServletRequest request) {
-        log.error(ex);
+        log.error("BusinessException", ex);
         var response = mapToErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
     }
 
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorResponse> handleException(final ResponseStatusException ex, final HttpServletRequest request) {
-        log.error(ex);
+        log.error("ResponseStatusException:", ex);
         HttpStatus httpStatus = HttpStatus.resolve(ex.getStatusCode().value());
         if (httpStatus == null) {
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
@@ -100,7 +100,7 @@ public class UnsecureHttpAdvice implements AuthenticationEntryPoint, CustomFilte
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(final Exception ex, final HttpServletRequest request) {
-        log.error(ex);
+        log.error("Exception", ex);
         var response = mapToErrorResponse(ex, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
