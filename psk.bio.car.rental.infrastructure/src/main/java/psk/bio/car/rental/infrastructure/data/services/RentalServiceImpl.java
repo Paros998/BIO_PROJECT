@@ -35,7 +35,7 @@ import java.util.UUID;
 import static psk.bio.car.rental.application.security.exceptions.BusinessExceptionCodes.VEHICLE_IS_NOT_RENTED;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class RentalServiceImpl implements RentalService {
     private static final Integer DEFAULT_PAYMENT_DAYS_DUE = 7;
 
@@ -44,18 +44,18 @@ public class RentalServiceImpl implements RentalService {
 
     private final CompanyFinancialConfiguration financialConfiguration;
 
-    @Autowired
-    private @Lazy ClientServiceImpl clientService;
-    @Autowired
-    private @Lazy PaymentServiceImpl paymentService;
-    @Autowired
-    private @Lazy VehicleServiceImpl vehicleService;
+    private final ClientServiceImpl clientService;
+    private final PaymentServiceImpl paymentService;
+    private final VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
     public UUID rentVehicle(final @NonNull UUID vehicleId, final @NonNull UUID clientId, final @NonNull Integer numberOfDays) {
+        if (numberOfDays <= 0) {
+            throw new IllegalArgumentException("Number of days must be greater than 0");
+        }
         userContextValidator.checkUserPerformingAction(clientId);
-        final VehicleEntity vehicle = vehicleService.getVehicle(vehicleId, VehicleState.READY_TO_RENT);
+        final VehicleEntity vehicle = vehicleService.findReadyToRentVehicle(vehicleId);
 
         final ClientEntity client = clientService.findById(clientId);
         final RentalEntity rentalEntity = RentalEntity.builder()

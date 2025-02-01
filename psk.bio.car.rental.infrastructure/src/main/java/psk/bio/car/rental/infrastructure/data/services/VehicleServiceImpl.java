@@ -44,13 +44,12 @@ import static psk.bio.car.rental.application.security.exceptions.BusinessExcepti
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class VehicleServiceImpl implements VehicleService {
     private final VehicleJpaRepository vehicleRepository;
     private final ContextProvider contextProvider;
 
-    @Autowired
-    private @Lazy PaymentServiceImpl paymentService;
+    private final PaymentServiceImpl paymentService;
 
     public PageResponse<VehicleModel> searchVehicles(final VehicleState vehicleState, final PageRequest pageRequest) {
         SpringPageRequest springPageRequest = PageMapper.toSpringPageRequest(pageRequest);

@@ -30,19 +30,16 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor = @__({@Autowired, @Lazy}))
 public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeJpaRepository employeeRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final UserContextValidator userContextValidator;
 
-    @Autowired
-    private @Lazy PaymentServiceImpl paymentService;
-    @Autowired
-    private @Lazy RentalServiceImpl rentalService;
-    @Autowired
-    private @Lazy VehicleServiceImpl vehicleService;
+    private final PaymentServiceImpl paymentService;
+    private final RentalServiceImpl rentalService;
+    private final VehicleServiceImpl vehicleService;
 
     @Override
     @Transactional
