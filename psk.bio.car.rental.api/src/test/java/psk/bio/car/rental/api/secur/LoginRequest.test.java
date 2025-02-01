@@ -1,4 +1,4 @@
-package test.psk.bio.car.rental.api.secur;
+package psk.bio.car.rental.api.secur;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

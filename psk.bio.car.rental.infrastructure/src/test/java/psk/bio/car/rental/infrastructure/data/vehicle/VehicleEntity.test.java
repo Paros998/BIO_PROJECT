@@ -11,10 +11,8 @@ import psk.bio.car.rental.application.rental.RentalState;
 import psk.bio.car.rental.application.security.exceptions.BusinessException;
 import psk.bio.car.rental.application.vehicle.VehicleState;
 import psk.bio.car.rental.infrastructure.data.rentals.RentalEntity;
-import psk.bio.car.rental.infrastructure.data.vehicle.VehicleEntity;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
